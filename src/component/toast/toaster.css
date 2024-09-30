@@ -3,7 +3,7 @@
   margin: 10px;
   border-radius: 4px;
   /* color: white; */
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -34,7 +34,7 @@
   color: #856404;
 }
 .toaster-span {
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   font-weight: 500;
 }
 .toaster-close {
@@ -52,7 +52,7 @@
     margin: 10px;
     border-radius: 4px;
     /* color: white; */
-    font-size: 14px;
+    font-size: var(--font-size-secondary);
     z-index: 1000;
   }
 }

@@ -11,7 +11,7 @@
   font-weight: 600;
 }
 .modal__delete > p {
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   font-weight: 400;
 }
 .modal__delete > button {

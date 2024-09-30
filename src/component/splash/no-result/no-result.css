@@ -21,7 +21,7 @@
   margin: 10px 0;
 }
 .no__result > p {
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   font-weight: 400;
   color: #777;
   width: 300px;

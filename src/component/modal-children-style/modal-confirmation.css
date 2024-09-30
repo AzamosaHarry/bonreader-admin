@@ -15,7 +15,7 @@
   margin-bottom: 10px;
 }
 .modal__confirmation__container > p {
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   font-weight: 400;
   text-align: center;
 }

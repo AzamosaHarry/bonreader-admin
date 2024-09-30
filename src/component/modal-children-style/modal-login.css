@@ -15,7 +15,7 @@
 }
 .modal__login__container > h1 {
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--font-size-primary);
   line-height: 24px;
   color: #000000;
   margin-bottom: 20px;
@@ -70,7 +70,7 @@
   width: 322px;
   height: 46px;
   border: 0;
-  background: #669933;
+  background: var(--color-secondary-accent);
   color: white;
 }
 .modal__login__container__form > p {
