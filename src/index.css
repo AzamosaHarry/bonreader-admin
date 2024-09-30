@@ -59,7 +59,7 @@ code {
 :root {
   /* Colors */
   --color-background: #ffffff;
-  --color-primary-accent: var(--color-primary-accent);
+  --color-primary-accent: #f58634;
   --color-secondary-accent: #669933;
   --color-text-primary: #0a0a0a;
   --color-text-secondary: #808080;

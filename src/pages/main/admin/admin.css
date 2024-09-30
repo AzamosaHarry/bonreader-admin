@@ -67,49 +67,49 @@
 }
 .admin__navbar__icon {
   font-size: 18px;
-  color: #f48a24;
+  color: var(--color-primary-accent);
 }
 .admin__navbar h3 {
   font-size: var(--font-size-secondary);
   font-weight: 500;
   margin-left: 10px;
-  color: #f48a24;
+  color: var(--color-primary-accent);
 }
 .admin__navbar__active > h3 {
   font-size: var(--font-size-secondary);
   font-weight: 500;
   margin-left: 10px;
-  color: #f48a24;
+  color: var(--color-primary-accent);
 }
 .admin__navbar__active {
-  background: #f48a24;
-  color: white;
+  background: var(--color-primary-accent);
+  color: var(--color-background);
 }
 .admin__navbar__active > .admin__navbar__icon {
-  color: white;
+  color: var(--color-background);
 }
 .admin__navbar__active > .admin__navbar__icon__submenu {
-  color: white;
+  color: var(--color-background);
 }
 .admin__navbar__novels__icon {
   margin-left: auto;
-  color: #f48a24;
+  color: var(--color-primary-accent);
   font-size: 22px;
   cursor: pointer;
 }
 .admin__navbar__novels__icon--active {
   margin-left: auto;
-  color: white;
+  color: var(--color-background);
   font-size: 22px;
   cursor: pointer;
 }
 .admin__navbar__novels__display__icon {
-  color: #f48a24;
+  color: var(--color-primary-accent);
   font-size: 20px;
   cursor: pointer;
 }
 .admin__navbar__novels__display__icon--active {
-  color: white;
+  color: var(--color-background);
   font-size: 20px;
   cursor: pointer;
 }
@@ -117,7 +117,7 @@
   font-size: var(--font-size-secondary);
   font-weight: 500;
   margin-left: 10px;
-  color: #f48a24;
+  color: var(--color-primary-accent);
 }
 .admin__navbar__novels__display__text--active {
   font-size: var(--font-size-secondary);
@@ -147,32 +147,31 @@
 .admin__navbar__novels__accordion {
   margin-top: 10px;
   display: none;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   width: 100%;
-  background: #f4892480;
+  /* background: red; */
 }
 .admin__navbar__novels__accordion.active {
   display: block;
-  border-radius: 10px;
 }
 .admin__navbar__novels__accordion h3 {
   width: 100%;
   border-top: 1px solid white;
   padding: 15px 0;
   margin: 5px 0;
-  color: #f48a24;
+  color: var(--color-primary-accent);
 }
 .admin__navbar__novels__accordion.active h3 {
   width: 100%;
   border-top: 1px solid white;
   padding: 15px 0;
-  color: white;
+  color: var(--color-background);
 }
 .admin__navbar__active > span {
-  color: white;
+  color: var(--color-background);
 }
 .admin__navbar__active > h3 {
-  color: white;
+  color: var(--color-background);
 }
 .admin__navbar__dropdown {
   display: flex;
