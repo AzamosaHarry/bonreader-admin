@@ -1,0 +1,20 @@
+.modal__delete {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+.modal__delete > h1 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.modal__delete > p {
+  font-size: 14px;
+  font-weight: 400;
+}
+.modal__delete > button {
+  background-color: #721c24;
+  min-width: 200px;
+}

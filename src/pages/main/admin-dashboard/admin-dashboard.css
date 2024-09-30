@@ -1,0 +1,113 @@
+.ad__dashboard {
+  min-height: 100vh;
+  padding: 0 5%;
+}
+
+.ad__dashboard__sc__one {
+  margin: 20px 0;
+}
+.ad__dashboard__sc__one > h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+.ad__dashboard__sc__two {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.ad__dashboard__sc__two__block {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #0009eb;
+  width: 23%;
+  border-radius: 20px;
+  padding: 20px 20px;
+}
+.ad__dashboard__sc__two__block__start {
+  background: white;
+  height: 40px;
+  width: 40px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ad__dashboard__sc__two__block__start__icon {
+  font-size: 25px;
+}
+.ad__dashboard__sc__two__block__end {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: white;
+}
+.ad__dashboard__sc__two__block__end > h1 {
+  font-size: 16px;
+  font-weight: 400;
+}
+.ad__dashboard__sc__two__block__end > p {
+  font-size: 16px;
+  font-weight: 600;
+}
+.ad__dashboard__sc__three {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0;
+}
+.ad__dashboard__sc__three__start {
+  width: 40%;
+}
+.ad__dashboard__sc__three__start > p {
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+.ad__dashboard__sc__three__start > img {
+  width: 500px;
+}
+.ad__dashboard__sc__three__end {
+  width: 49%;
+}
+.ad__dashboard__sc__three__end > p {
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+.ad__dashboard__sc__three__end > img {
+  width: 500px;
+}
+@media all and (max-width: 768px) {
+  .ad__dashboard__sc__two {
+    gap: 2%;
+  }
+  .ad__dashboard__sc__two__block {
+    width: 48%;
+    padding: 10px 10px;
+    margin-bottom: 10px;
+  }
+  .ad__dashboard__sc__two__block__end > h1 {
+    font-size: 13px;
+    font-weight: 400;
+  }
+  .ad__dashboard__sc__two__block__end > p {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .ad__dashboard__sc__three {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .ad__dashboard__sc__three__end {
+    width: 100%;
+  }
+  .ad__dashboard__sc__three__start {
+    width: 100%;
+  }
+  .ad__dashboard__sc__three__start > img {
+    width: 100%;
+  }
+  .ad__dashboard__sc__three__end > img {
+    width: 100%;
+  }
+}

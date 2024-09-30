@@ -1,0 +1,70 @@
+.admin-roles-single {
+  min-height: 100vh;
+  padding: 1.5% 5%;
+}
+
+.admin-roles-single__title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.admin-roles-single__page-check-all,
+.admin-roles-single__section-check-all {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.admin-roles-single__page-check-all input,
+.admin-roles-single__section-check-all input {
+  margin-right: 10px;
+}
+.admin-roles-single__section__wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.admin-roles-single__section {
+  background: #f7f5ff;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+  width: 24%;
+}
+
+.admin-roles-single__section-title {
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+}
+
+.admin-roles-single__permissions {
+  margin-top: 10px;
+}
+
+.admin-roles-single__permission {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+.admin-roles-single__permission input[type="checkbox"] {
+  border: 1px solid #f2994a;
+}
+
+@media all and (max-width: 768px) {
+  .admin-roles-single {
+    min-height: 100vh;
+    padding: 5% 5%;
+  }
+  .admin-roles-single__section {
+    width: 100%;
+  }
+}

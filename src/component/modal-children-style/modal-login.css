@@ -1,0 +1,96 @@
+.modal__login__container {
+  padding: 15px 0;
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 23px;
+  width: 100%;
+  height: 100%;
+}
+.modal__login__container > img {
+  width: 190px;
+  height: 37.15px;
+}
+.modal__login__container > h1 {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
+  margin-bottom: 20px;
+}
+.modal__login__container__social__signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.modal__login__container__social__signin > button {
+  width: 190px;
+  height: 37.15px;
+  width: 151px;
+  padding: 10px;
+  font-size: 10px;
+  line-height: 24px;
+  font-weight: 400;
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  border-radius: 30px;
+  border: 0;
+}
+.modal__login__container__social__signin > button > img {
+  width: 18px;
+  height: 18px;
+  margin-right: 15px;
+}
+
+.modal__login__container__form {
+  display: flex;
+  flex-direction: column;
+}
+.modal__login__container__form > input {
+  margin: 5px 0;
+  border-radius: 30px;
+  height: 48px;
+  width: 322px;
+  border: 0;
+  font-size: 12px;
+  line-height: 24px;
+  padding: 10px;
+  background: #fff6eff0;
+  color: #868686;
+  font-weight: 500;
+}
+.modal__login__container__form > button {
+  border-radius: 30px;
+  margin-top: 40px;
+  margin-bottom: 15px;
+  width: 322px;
+  height: 46px;
+  border: 0;
+  background: #669933;
+  color: white;
+}
+.modal__login__container__form > p {
+  font-size: 12px;
+  line-height: 24px;
+  text-align: center;
+}
+.modal__login__container__form > p > span {
+  font-weight: 600;
+  cursor: pointer;
+}
+.modal__login__container > p {
+  font-size: 12px;
+  line-height: 24px;
+  text-align: center;
+  margin-top: auto;
+}
+.modal__login__container > p > span {
+  font-weight: 600;
+  color: salmon;
+  cursor: pointer;
+  margin-left: 10px;
+}

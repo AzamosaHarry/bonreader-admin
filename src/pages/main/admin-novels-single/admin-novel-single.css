@@ -1,0 +1,102 @@
+.ad__novel__single {
+  padding: 20px 5%;
+}
+.ad__novel__single__section__one {
+  display: flex;
+  align-items: start;
+  gap: 50px;
+}
+.ad__novel__single__start {
+  width: 200px;
+  height: 260px;
+}
+.ad__novel__single__start > img {
+  width: 100%;
+  object-fit: cover;
+}
+.ad__novel__single__end {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.ad__novel__single__end > h1 {
+  font-size: 22px;
+  font-weight: 700;
+}
+.ad__novel__single__end > span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.ad__novel__single__section__two {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 30px;
+}
+.ad__novel__single__section__two > h1 {
+  font-size: 22px;
+  font-weight: 700;
+}
+.ad__novel__single__section__two__block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 0;
+  border-bottom: 1px solid #ddd;
+}
+.ad__novel__single__section__two__block > h1 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.ad__novel__single__section__two__block > h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f2994a;
+}
+.ad__novel__single__section__two__block > span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.ad__novel__single__section__two__block > span > p {
+  width: 65%;
+}
+.ad__novel__single__section__two__block > span > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+@media all and (max-width: 768px) {
+  .ad__novel__single__section__one {
+    gap: 20px;
+  }
+  .ad__novel__single__end > span {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .ad__novel__single__section__two {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 0px;
+  }
+  .ad__novel__single__section__two__block > span > p {
+    width: 100%;
+  }
+  .ad__novel__single__section__two__block > span {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 20px;
+  }
+  .ad__novel__single__section__two__block > span > div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+}

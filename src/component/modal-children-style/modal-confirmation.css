@@ -1,0 +1,23 @@
+.modal__confirmation__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.modal__confirmation__container > img {
+  object-fit: contain;
+  width: 150px;
+}
+.modal__confirmation__container > h1 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.modal__confirmation__container > p {
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+}
+.modal__confirmation__container > button {
+}

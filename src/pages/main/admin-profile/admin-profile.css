@@ -1,0 +1,58 @@
+.admin__profile__section__one__start {
+  width: 100%;
+  background: #f2994a;
+  padding: 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  min-height: 100px;
+}
+.admin__profile__section__one__end {
+  width: 100%;
+  background: #f7f5ff;
+  padding: 20px;
+  min-height: 100px;
+}
+.admin__profile__section__one__end__text {
+  display: flex;
+  align-items: center;
+  gap: 100px;
+}
+.admin__profile__section__one__end__text > h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.admin__profile__section__one__end__text > span {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.admin__profile__section__one__end__text > span > h1 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.admin__profile__section__one__end__text > span > h3 {
+  font-size: 12px;
+  font-weight: 400;
+}
+.admin__profile__section__one__end__img {
+  height: 150px;
+  width: 150px;
+  border-radius: 100%;
+  margin-top: -100px;
+  margin-bottom: 30px;
+  background: #d9d9d9;
+}
+.admin__profile__section__two {
+  margin: 50px 0;
+}
+
+@media all and (max-width: 768px) {
+  .admin__profile__section__one__end__text {
+    flex-direction: column;
+    align-items: start;
+    gap: 20px;
+  }
+}
