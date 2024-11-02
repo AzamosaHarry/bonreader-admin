@@ -24,6 +24,7 @@ function Login() {
         email: email,
         password: password,
       });
+
       if (response.status === 200 || response.status === "success") {
         setErrorMessage("");
         navigate("/admin/dashboard");
@@ -75,14 +76,14 @@ function Login() {
             {auth.loading ? <ClipLoader color="#fff" size={20} /> : "Sign in"}
           </button>
           <p>
-            Forgot password?{" "}
+            Forgot password?
             <span onClick={() => navigate("/forget-password")}>Reset Here</span>
           </p>
         </form>
-        <p>
+        {/* <p>
           Don't have an account?{" "}
           <span onClick={() => navigate("/signup")}>Sign up</span>
-        </p>
+        </p> */}
       </div>
     </div>
   );
