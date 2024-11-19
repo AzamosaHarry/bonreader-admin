@@ -11,6 +11,8 @@ import {
   useGetGenres,
 } from "../../../redux/actions/genresActions";
 import Loading from "../../../component/splash/loading/Loading";
+import NoResult from "../../../component/splash/no-result/NoResult";
+import { MdDelete } from "react-icons/md";
 
 function AdminGenre() {
   const getGenres = useGetGenres();
@@ -49,26 +51,26 @@ function AdminGenre() {
     console.log(formData);
   };
 
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
 
   const handleSelectUser = (id) => {
-    setSelectedUsers((prevSelectedUsers) =>
-      prevSelectedUsers.includes(id)
-        ? prevSelectedUsers.filter((userId) => userId !== id)
-        : [...prevSelectedUsers, id]
+    setSelectedGenres((prevSelectedGenres) =>
+      prevSelectedGenres.includes(id)
+        ? prevSelectedGenres.filter((userId) => userId !== id)
+        : [...prevSelectedGenres, id]
     );
   };
 
   const handleSelectAllUsers = () => {
-    if (selectedUsers.length === genres.length) {
-      setSelectedUsers([]);
+    if (selectedGenres.length === genres.length) {
+      setSelectedGenres([]);
     } else {
-      setSelectedUsers(genres.map((user) => user.id));
+      setSelectedGenres(genres.map((user) => user.id));
     }
   };
 
   const handleBulkAction = () => {
-    alert(`Performing bulk action on users: ${selectedUsers.join(", ")}`);
+    alert(`Performing bulk action on users: ${selectedGenres.join(", ")}`);
   };
 
   const handleGetGenres = async () => {
@@ -134,7 +136,7 @@ function AdminGenre() {
         return;
       } else {
         toastManager.addToast({
-          message: "Failed to delete tag",
+          message: "Failed to delete genre",
           type: "error",
         });
       }
@@ -181,7 +183,7 @@ function AdminGenre() {
             <div className="admin-table-cell">
               <input
                 type="checkbox"
-                checked={selectedUsers.length === genres.length}
+                checked={selectedGenres.length === genres.length}
                 onChange={handleSelectAllUsers}
               />
             </div>
@@ -193,6 +195,8 @@ function AdminGenre() {
           </div>
           {loading ? (
             <Loading />
+          ) : genres.length == 0 ? (
+            <NoResult />
           ) : (
             <div className="admin-table-body">
               {genres.map((genre) => (
@@ -200,7 +204,7 @@ function AdminGenre() {
                   <div className="admin-table-cell">
                     <input
                       type="checkbox"
-                      checked={selectedUsers.includes(genre.id)}
+                      checked={selectedGenres.includes(genre.id)}
                       onChange={() => handleSelectUser(genre.id)}
                     />
                   </div>
@@ -209,20 +213,18 @@ function AdminGenre() {
                   {/* <div className="admin-table-cell">{genre.totalNovels}</div> */}
                   <div className="admin-table-cell">{genre.createdAt}</div>
                   <div className="admin-table-cell">
-                    <button
+                    <MdDelete
                       onClick={() => {
                         setDeleteId(genre.id);
                         handleModalClick("delete");
                       }}
                       style={{
-                        backgroundColor: "#e74c3c22",
-                        color: "#e74c3c",
-                        border: "none",
-                        padding: "10px 15px",
+                        cursor: "pointer",
+                        fontSize: "14px",
+                        padding: "0",
+                        transform: "scale(1.5)",
                       }}
-                    >
-                      Delete genre
-                    </button>
+                    />
                   </div>
                 </div>
               ))}
@@ -250,7 +252,7 @@ function AdminGenre() {
       <Modal isOpen={isOpen.delete} onClose={closeModal}>
         <div className="admin__modal">
           <h1>Are you sure you want to delete?</h1>
-          <p>This action is not reversible</p>
+          {/* <p>This action is not reversible</p> */}
           <button onClick={() => handleDeleteGenres(deleteId)}>
             Delete permanently
           </button>

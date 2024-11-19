@@ -4,7 +4,6 @@ import "./App.css";
 import Login from "./pages/auth/login/Login";
 import ScrollToTop from "./utils/ScrollToTop";
 
-import { ADMIN_ROLES } from "./config/adminRoles";
 import PublicRoute from "./route/publicRoute";
 import PrivateRoute from "./route/privateRoute";
 import Admin from "./pages/main/admin/Admin";
@@ -52,7 +51,7 @@ function App() {
           </Route>
 
           {/* PRIVATE ROUTES */}
-          <Route element={<PrivateRoute allowedRoles={ADMIN_ROLES} />}>
+          <Route element={<PrivateRoute />}>
             <Route path="/" element={<Admin />}>
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="novels" element={<AdminNovel />} />
@@ -92,7 +91,7 @@ function App() {
             </Route>
           </Route>
 
-          {/* Catch all route */}
+          {/* CATCH ALL ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

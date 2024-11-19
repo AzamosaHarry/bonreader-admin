@@ -40,7 +40,7 @@ function AdminHeader({ handleNav }) {
         </div>
         <div
           className="ad__header__sc__two__profile"
-          onClick={() => navigate("/admin/profile")}
+          onClick={() => navigate("/profile")}
         >
           <img alt="profile" src={image2} />
           <p>Ramon Ridwan</p>

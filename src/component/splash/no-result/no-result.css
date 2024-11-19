@@ -9,13 +9,10 @@
   background-color: inherit;
   text-align: center;
 }
-.no__result > img {
-  object-fit: contain;
-  width: 200px;
-}
+
 .no__result > h1 {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 400;
   color: #121212;
   width: 300px;
   margin: 10px 0;
@@ -28,10 +25,6 @@
 }
 
 @media all and (max-width: 768px) {
-  .no__result > img {
-    object-fit: contain;
-    width: 60%;
-  }
   .no__result > h1 {
     width: 100%;
   }

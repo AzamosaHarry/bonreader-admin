@@ -18,7 +18,7 @@
 .admin__modal > button {
   font-size: var(--font-size-secondary);
   font-weight: 600;
-  background-color: #f48a24;
+  background-color: crimson;
 }
 .admin__modal__form {
   display: flex;

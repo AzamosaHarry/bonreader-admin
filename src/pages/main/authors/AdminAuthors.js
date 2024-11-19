@@ -90,7 +90,7 @@ function AdminAuthors() {
               <div
                 key={user.id}
                 className="admin-table-row"
-                onClick={() => navigate("/admin/authors/1")}
+                onClick={() => navigate("/authors/1")}
               >
                 <div className="admin-table-cell">
                   <input

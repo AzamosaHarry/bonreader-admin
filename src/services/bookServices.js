@@ -2,7 +2,7 @@ import api from "../api/axios";
 
 export const getNovels = async () => {
   try {
-    const response = await api.get("/novels/");
+    const response = await api.get("/novels/admin/");
     return response.data;
   } catch (error) {
     if (error.response) {

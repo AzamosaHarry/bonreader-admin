@@ -23,6 +23,28 @@ export const fetchUsers = async () => {
   }
 };
 
+export const fetchAdmins = async () => {
+  try {
+    const response = await api.get(`/staff/`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response) {
+      // Add server response details to the error
+      error.message = `Service failed: ${
+        error.response.data.error || error.response.statusText
+      }`;
+    } else if (error.request) {
+      // Add request details to the error
+      error.message = "Service failed: No response received from server.";
+    } else {
+      // Add request setup details to the error
+      error.message = `Service failed: ${error.message}`;
+    }
+    throw error;
+  }
+};
+
 export const fetchUser = async (id) => {
   try {
     const response = await api.get(`/users/${id}`);

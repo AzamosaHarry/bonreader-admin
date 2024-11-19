@@ -1,41 +1,15 @@
-import { BiPlus } from "react-icons/bi";
 import "./admin-users.css";
-import { FiFilter } from "react-icons/fi";
 import { TiExportOutline } from "react-icons/ti";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchUsers } from "../../../redux/actions/userActions";
-
-const DATA = [
-  {
-    id: 1,
-    name: "James Bachelor",
-    userId: "23749854",
-    email: "jbache@gmail.com",
-    subscribed: "yes",
-    lastActivity: "10/12/2024",
-    subValidity: "10/12/2024",
-    status: "approved",
-    action: "...",
-  },
-  {
-    id: 1,
-    name: "Flora Jay",
-    userId: "23749854",
-    email: "floraflora@gmail.com",
-    subscribed: "No",
-    lastActivity: "10/12/2024",
-    subValidity: "10/12/2024",
-    status: "approved",
-    action: "...",
-  },
-
-  // Add more user records as needed
-];
+import Loading from "../../../component/splash/loading/Loading";
+import NoResult from "../../../component/splash/no-result/NoResult";
 
 function AdminUsers() {
   const fetchUsers = useFetchUsers();
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -49,10 +23,10 @@ function AdminUsers() {
   };
 
   const handleSelectAllUsers = () => {
-    if (selectedUsers.length === DATA.length) {
+    if (selectedUsers?.length === users?.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(DATA.map((user) => user.id));
+      setSelectedUsers(users?.map((user) => user.id));
     }
   };
 
@@ -64,7 +38,8 @@ function AdminUsers() {
     try {
       setLoading(true);
       const response = await fetchUsers();
-      console.log(response);
+      setUsers(response.payload.results);
+      console.log("all users", response);
     } catch (err) {
       console.error("Error fetching users:", err);
     } finally {
@@ -74,7 +49,7 @@ function AdminUsers() {
 
   useEffect(() => {
     handleFetchUsers();
-  }, [users]);
+  }, []);
 
   return (
     <div className="ad__novel">
@@ -87,7 +62,7 @@ function AdminUsers() {
         </button>
         <button
           onClick={handleBulkAction}
-          disabled={selectedUsers.length === 0}
+          disabled={selectedUsers?.length === 0}
         >
           Bulk action
         </button>
@@ -98,44 +73,56 @@ function AdminUsers() {
             <div className="admin-table-cell">
               <input
                 type="checkbox"
-                checked={selectedUsers.length === DATA.length}
+                checked={selectedUsers?.length === users?.length}
                 onChange={handleSelectAllUsers}
               />
             </div>
             <div className="admin-table-cell">S/N</div>
             <div className="admin-table-cell">Name</div>
+            <div className="admin-table-cell">Pen Name</div>
             <div className="admin-table-cell">Email Address</div>
             <div className="admin-table-cell">Subscribed</div>
-            <div className="admin-table-cell">Last Activity</div>
             <div className="admin-table-cell">Sub Validity</div>
             <div className="admin-table-cell">Status</div>
-            <div className="admin-table-cell">Action</div>
+            {/* <div className="admin-table-cell">Action</div> */}
           </div>
-          <div className="admin-table-body">
-            {DATA.map((user) => (
-              <div
-                key={user.id}
-                className="admin-table-row"
-                onClick={() => navigate("1")}
-              >
-                <div className="admin-table-cell">
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.includes(user.id)}
-                    onChange={() => handleSelectUser(user.id)}
-                  />
+          {loading ? (
+            <Loading />
+          ) : users.length == 0 ? (
+            <NoResult />
+          ) : (
+            <div className="admin-table-body">
+              {users?.map((user) => (
+                <div
+                  key={user.id}
+                  className="admin-table-row"
+                  onClick={() => navigate("1")}
+                >
+                  <div className="admin-table-cell">
+                    <input
+                      type="checkbox"
+                      checked={selectedUsers.includes(user.id)}
+                      onChange={() => handleSelectUser(user.id)}
+                    />
+                  </div>
+                  <div className="admin-table-cell">{user.id}</div>
+                  <div className="admin-table-cell">{`${user.first_name} ${user.last_name}`}</div>
+                  <div className="admin-table-cell">{user.pen_name}</div>
+                  <div className="admin-table-cell">{user.email}</div>
+                  <div className="admin-table-cell">
+                    {user.subscription_class}
+                  </div>
+                  <div className="admin-table-cell">
+                    {user.subscription_end_date}
+                  </div>
+                  <div className="admin-table-cell">
+                    {user.is_active ? `active` : `inactive`}
+                  </div>
+                  {/* <div className="admin-table-cell">{user.action}</div> */}
                 </div>
-                <div className="admin-table-cell">{user.id}</div>
-                <div className="admin-table-cell">{user.name}</div>
-                <div className="admin-table-cell">{user.email}</div>
-                <div className="admin-table-cell">{user.subscribed}</div>
-                <div className="admin-table-cell">{user.lastActivity}</div>
-                <div className="admin-table-cell">{user.subValidity}</div>
-                <div className="admin-table-cell">{user.status}</div>
-                <div className="admin-table-cell">{user.action}</div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

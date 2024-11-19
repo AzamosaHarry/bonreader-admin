@@ -7,6 +7,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useLogin } from "../../../redux/actions/authActions";
+import toastManager from "../../../component/toast/ToasterManager";
 
 function Login() {
   const navigate = useNavigate();
@@ -20,14 +21,15 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await login({
-        email: email,
-        password: password,
-      });
+      const response = await login(email, password);
 
       if (response.status === 200 || response.status === "success") {
         setErrorMessage("");
-        navigate("/admin/dashboard");
+        toastManager.addToast({
+          message: "Successful login",
+          type: "success",
+        });
+        navigate("/dashboard");
         return;
       } else {
         setErrorMessage(response.message);
@@ -58,14 +60,14 @@ function Login() {
             type="email"
             important
             placeholder="Enter your email address"
-            onClick={(e) => {
+            onChange={(e) => {
               setEmail(e.target.value);
             }}
           />
           <input
             type="password"
             placeholder="Enter your password"
-            onClick={(e) => {
+            onChange={(e) => {
               setPassword(e.target.value);
             }}
           />
