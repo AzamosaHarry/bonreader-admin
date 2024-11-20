@@ -200,7 +200,7 @@ function AdminRoles() {
       <Modal isOpen={isOpen.delete} onClose={closeModal}>
         <div className="admin__modal">
           <h1>Are you sure you want to delete?</h1>
-          <p>This action is not reversible</p>
+
           <button onClick={() => handleDeleteRole(deleteId)}>
             Delete permanently
           </button>

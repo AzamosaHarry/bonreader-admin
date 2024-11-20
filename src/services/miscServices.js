@@ -1,8 +1,8 @@
 import api from "../api/axios";
 
-export const getReviews = async () => {
+export const getDashboardData = async () => {
   try {
-    const response = await api.get(`/content-ratings/`);
+    const response = await api.get(`/dashboard/admin`);
     return response.data;
   } catch (error) {
     if (error.response) {

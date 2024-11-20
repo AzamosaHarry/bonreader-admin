@@ -1,13 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { useDispatcher } from "../../utils/useDispatcher";
-import { getReviews } from "../../services/reviewServices";
+import { getDashboardData } from "../../services/miscServices";
 
-export const doGetReviews = createAsyncThunk(
-  "books/doGetReviews",
+export const doGetDashboardData = createAsyncThunk(
+  "books/doGetDashboardData",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await getReviews();
+      const data = await getDashboardData();
       return data;
     } catch (error) {
       return rejectWithValue(error.message || "Action failed");
@@ -15,4 +15,4 @@ export const doGetReviews = createAsyncThunk(
   }
 );
 
-export const useGetReviews = () => useDispatcher(doGetReviews);
+export const useGetDashboardData = () => useDispatcher(doGetDashboardData);
