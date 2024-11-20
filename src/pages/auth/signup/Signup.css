@@ -24,7 +24,7 @@
 }
 .signup__container > h1 {
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--font-size-primary);
   line-height: 24px;
   color: #000000;
   margin-bottom: 20px;
@@ -64,7 +64,7 @@
   border-radius: 30px;
   height: 48px;
   width: 322px;
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   line-height: 24px;
   padding: 10px;
   border: 0;
@@ -78,12 +78,12 @@
   width: 322px;
   height: 46px;
   border: 0;
-  background: #669933;
+  background: var(--color-secondary-accent);
   color: white;
 }
 
 .signup__container > p {
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   line-height: 24px;
   text-align: center;
   margin-top: auto;

@@ -1,31 +1,20 @@
 import { BiPlus } from "react-icons/bi";
 import "./admin-roles.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../../component/modal/Modal";
 import "../../../component//modal-children-style/modal-admin.css";
-
-const DATA = [
-  {
-    id: 1,
-    name: "Super Admin",
-    action: "...",
-  },
-  {
-    id: 2,
-    name: "Admin",
-    action: "...",
-  },
-  {
-    id: 3,
-    name: "Sub Admin",
-    action: "...",
-  },
-
-  // Add more user records as needed
-];
+import { useGetRoles } from "../../../redux/actions/rolePermissionAction";
+import Loading from "../../../component/splash/loading/Loading";
+import NoResult from "../../../component/splash/no-result/NoResult";
+import { MdDelete } from "react-icons/md";
 
 function AdminRoles() {
+  const getRoles = useGetRoles();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [roles, setRoles] = useState([]);
+  const [deleteId, setDeleteId] = useState(null);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     role: "",
@@ -39,36 +28,86 @@ function AdminRoles() {
     });
   };
   const handleModalClick = (option) => {
-    option === "new"
-      ? setIsOpen((prev) => ({ ...prev, new: true }))
-      : closeModal();
+    if (option === "new") {
+      setIsOpen((prev) => ({ ...prev, new: true }));
+    } else if (option === "delete") {
+      setIsOpen((prev) => ({ ...prev, delete: true }));
+    } else {
+      closeModal();
+    }
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     console.log(formData);
   };
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedRoles, setSelectedRoles] = useState([]);
 
   const handleSelectUser = (id) => {
-    setSelectedUsers((prevSelectedUsers) =>
-      prevSelectedUsers.includes(id)
-        ? prevSelectedUsers.filter((userId) => userId !== id)
-        : [...prevSelectedUsers, id]
+    setSelectedRoles((prevSelectedRoles) =>
+      prevSelectedRoles.includes(id)
+        ? prevSelectedRoles.filter((userId) => userId !== id)
+        : [...prevSelectedRoles, id]
     );
   };
 
   const handleSelectAllUsers = () => {
-    if (selectedUsers.length === DATA.length) {
-      setSelectedUsers([]);
+    if (selectedRoles.length === roles.length) {
+      setSelectedRoles([]);
     } else {
-      setSelectedUsers(DATA.map((user) => user.id));
+      setSelectedRoles(roles.map((user) => user.id));
     }
   };
 
   const handleBulkAction = () => {
-    alert(`Performing bulk action on users: ${selectedUsers.join(", ")}`);
+    alert(`Performing bulk action on users: ${selectedRoles.join(", ")}`);
   };
+
+  const handleGetRoles = async () => {
+    try {
+      setLoading(true);
+      const response = await getRoles();
+      setRoles(response.payload.results);
+      console.log("get roles", response);
+    } catch (err) {
+      console.error("Error fetching roles:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteRole = async (id) => {
+    // try {
+    //   setLoading(true);
+    //   const response = await deleteRole(id);
+    //   if (response.meta.requestStatus == "fulfilled") {
+    //     toastManager.addToast({
+    //       message: "Role deleted successfully",
+    //       type: "success",
+    //     });
+    //     triggerManualUpdate();
+    //     return;
+    //   } else {
+    //     toastManager.addToast({
+    //       message: "Failed to delete role",
+    //       type: "error",
+    //     });
+    //   }
+    // } catch (err) {
+    //   console.error("Error deleting:", err);
+    //   toastManager.addToast({
+    //     message: err,
+    //     type: "error",
+    //   });
+    // } finally {
+    //   setLoading(false);
+    //   closeModal();
+    // }
+  };
+
+  useEffect(() => {
+    handleGetRoles();
+  }, []);
 
   return (
     <div className="ad__novel">
@@ -90,7 +129,7 @@ function AdminRoles() {
             <div className="admin-table-cell">
               <input
                 type="checkbox"
-                checked={selectedUsers.length === DATA.length}
+                checked={selectedRoles.length === roles.length}
                 onChange={handleSelectAllUsers}
               />
             </div>
@@ -98,28 +137,47 @@ function AdminRoles() {
             <div className="admin-table-cell">Name</div>
             <div className="admin-table-cell">Action</div>
           </div>
-          <div className="admin-table-body">
-            {DATA.map((user) => (
-              <div
-                key={user.id}
-                className="admin-table-row"
-                onClick={() =>
-                  navigate("/admin/admin-roles", { state: { type: user.name } })
-                }
-              >
-                <div className="admin-table-cell">
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.includes(user.id)}
-                    onChange={() => handleSelectUser(user.id)}
-                  />
+          {loading ? (
+            <Loading />
+          ) : roles.length == 0 ? (
+            <NoResult />
+          ) : (
+            <div className="admin-table-body">
+              {roles.map((role) => (
+                <div
+                  key={role.id}
+                  className="admin-table-row"
+                  onClick={() =>
+                    navigate("/admin-roles", { state: { type: role.name } })
+                  }
+                >
+                  <div className="admin-table-cell">
+                    <input
+                      type="checkbox"
+                      checked={selectedRoles.includes(role.id)}
+                      onChange={() => handleSelectUser(role.id)}
+                    />
+                  </div>
+                  <div className="admin-table-cell">{role.id}</div>
+                  <div className="admin-table-cell">{role.name}</div>
+                  <div className="admin-table-cell">
+                    <MdDelete
+                      onClick={() => {
+                        setDeleteId(role.id);
+                        handleModalClick("delete");
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        fontSize: "14px",
+                        padding: "0",
+                        transform: "scale(1.5)",
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="admin-table-cell">{user.id}</div>
-                <div className="admin-table-cell">{user.name}</div>
-                <div className="admin-table-cell">{user.action}</div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -136,6 +194,16 @@ function AdminRoles() {
             />
           </form>
           <button>Add New Role</button>
+        </div>
+      </Modal>
+
+      <Modal isOpen={isOpen.delete} onClose={closeModal}>
+        <div className="admin__modal">
+          <h1>Are you sure you want to delete?</h1>
+
+          <button onClick={() => handleDeleteRole(deleteId)}>
+            Delete permanently
+          </button>
         </div>
       </Modal>
     </div>

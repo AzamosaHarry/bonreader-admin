@@ -1,36 +1,37 @@
-import { BiPlus } from "react-icons/bi";
 import "./admin-authors.css";
-import { FiFilter } from "react-icons/fi";
 import { TiExportOutline } from "react-icons/ti";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const DATA = [
-  {
-    id: 1,
-    name: "James Bachelor",
-    userId: "23749854",
-    email: "jbache@gmail.com",
-    totalNovels: "12",
-    status: "active",
-    action: "...",
-  },
-  {
-    id: 1,
-    name: "Flora Jay",
-    userId: "23749854",
-    email: "floraflora@gmail.com",
-    totalNovels: "1",
-    status: "inactive",
-    action: "...",
-  },
-
-  // Add more user records as needed
-];
+import Loading from "../../../component/splash/loading/Loading";
+import NoResult from "../../../component/splash/no-result/NoResult";
+import { useGetAuthors } from "../../../redux/actions/userActions";
+import { MdDelete } from "react-icons/md";
+import Modal from "../../../component/modal/Modal";
 
 function AdminAuthors() {
+  const getAuthors = useGetAuthors();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [authors, setAuthors] = useState([]);
+  const [deleteId, setDeleteId] = useState(null);
   const navigate = useNavigate();
   const [selectedUsers, setSelectedUsers] = useState([]);
+
+  const [isOpen, setIsOpen] = useState({
+    delete: false,
+  });
+  const closeModal = () => {
+    setIsOpen({
+      delete: false,
+    });
+  };
+  const handleModalClick = (option) => {
+    if (option === "delete") {
+      setIsOpen((prev) => ({ ...prev, delete: true }));
+    } else {
+      closeModal();
+    }
+  };
 
   const handleSelectUser = (id) => {
     setSelectedUsers((prevSelectedUsers) =>
@@ -41,16 +42,62 @@ function AdminAuthors() {
   };
 
   const handleSelectAllUsers = () => {
-    if (selectedUsers.length === DATA.length) {
+    if (selectedUsers.length === authors.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(DATA.map((user) => user.id));
+      setSelectedUsers(authors.map((user) => user.id));
     }
   };
 
   const handleBulkAction = () => {
     alert(`Performing bulk action on users: ${selectedUsers.join(", ")}`);
   };
+
+  const handleDeleteAuthor = async (id) => {
+    // try {
+    //   setLoading(true);
+    //   const response = await deleteAuthor(id);
+    //   if (response.meta.requestStatus == "fulfilled") {
+    //     toastManager.addToast({
+    //       message: "Role deleted successfully",
+    //       type: "success",
+    //     });
+    //     triggerManualUpdate();
+    //     return;
+    //   } else {
+    //     toastManager.addToast({
+    //       message: "Failed to delete role",
+    //       type: "error",
+    //     });
+    //   }
+    // } catch (err) {
+    //   console.error("Error deleting:", err);
+    //   toastManager.addToast({
+    //     message: err,
+    //     type: "error",
+    //   });
+    // } finally {
+    //   setLoading(false);
+    //   closeModal();
+    // }
+  };
+
+  const handleGetAuthors = async () => {
+    try {
+      setLoading(true);
+      const response = await getAuthors();
+      setAuthors(response.payload.results);
+      console.log("get authors", response);
+    } catch (err) {
+      console.error("Error fetching roles:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleGetAuthors();
+  }, []);
 
   return (
     <div className="ad__novel">
@@ -74,7 +121,7 @@ function AdminAuthors() {
             <div className="admin-table-cell">
               <input
                 type="checkbox"
-                checked={selectedUsers.length === DATA.length}
+                checked={selectedUsers.length === authors.length}
                 onChange={handleSelectAllUsers}
               />
             </div>
@@ -85,31 +132,82 @@ function AdminAuthors() {
             <div className="admin-table-cell">Status</div>
             <div className="admin-table-cell">Action</div>
           </div>
-          <div className="admin-table-body">
-            {DATA.map((user) => (
-              <div
-                key={user.id}
-                className="admin-table-row"
-                onClick={() => navigate("/admin/authors/1")}
-              >
-                <div className="admin-table-cell">
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.includes(user.id)}
-                    onChange={() => handleSelectUser(user.id)}
-                  />
+          {loading ? (
+            <Loading />
+          ) : authors.length == 0 ? (
+            <NoResult />
+          ) : (
+            <div className="admin-table-body">
+              {authors.map((user) => (
+                <div key={user.id} className="admin-table-row">
+                  <div
+                    className="admin-table-cell"
+                    onClick={() => navigate("/authors/1")}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedUsers.includes(user.id)}
+                      onChange={() => handleSelectUser(user.id)}
+                    />
+                  </div>
+                  <div
+                    className="admin-table-cell"
+                    onClick={() => navigate("/authors/1")}
+                  >
+                    {user.id}
+                  </div>
+                  <div
+                    className="admin-table-cell"
+                    onClick={() => navigate("/authors/1")}
+                  >{`${user.first_name} ${user.last_name}`}</div>
+                  <div
+                    className="admin-table-cell"
+                    onClick={() => navigate("/authors/1")}
+                  >
+                    {user.email}
+                  </div>
+                  <div
+                    className="admin-table-cell"
+                    onClick={() => navigate("/authors/1")}
+                  >
+                    {user.num_novels}
+                  </div>
+                  <div
+                    className="admin-table-cell"
+                    onClick={() => navigate("/authors/1")}
+                  >
+                    {user.is_active ? `active` : `inactive`}
+                  </div>
+                  <div className="admin-table-cell">
+                    <MdDelete
+                      onClick={() => {
+                        setDeleteId(user.id);
+                        handleModalClick("delete");
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        fontSize: "14px",
+                        padding: "0",
+                        transform: "scale(1.5)",
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="admin-table-cell">{user.id}</div>
-                <div className="admin-table-cell">{user.name}</div>
-                <div className="admin-table-cell">{user.email}</div>
-                <div className="admin-table-cell">{user.totalNovels}</div>
-                <div className="admin-table-cell">{user.status}</div>
-                <div className="admin-table-cell">{user.action}</div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
+      <Modal isOpen={isOpen.delete} onClose={closeModal}>
+        <div className="admin__modal">
+          <h1>Are you sure you want to delete?</h1>
+
+          <button onClick={() => handleDeleteAuthor(deleteId)}>
+            Delete permanently
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

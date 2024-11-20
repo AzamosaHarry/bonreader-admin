@@ -37,7 +37,7 @@
 .admin-roles-single__section-title {
   margin-bottom: 20px;
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--font-size-primary);
   width: 100%;
 }
 

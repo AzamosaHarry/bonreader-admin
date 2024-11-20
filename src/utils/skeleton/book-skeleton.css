@@ -12,7 +12,7 @@
 }
 .book-skeleton-span {
   width: 200px;
-  height: 14px;
+  height: var(--font-size-secondary);
 }
 
 .book-skeleton-synopsis {

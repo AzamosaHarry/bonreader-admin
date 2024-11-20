@@ -11,6 +11,7 @@ import {
 import toastManager from "../../../component/toast/ToasterManager";
 import Loading from "../../../component/splash/loading/Loading";
 import Modal from "../../../component/modal/Modal";
+import { MdDelete } from "react-icons/md";
 
 function AdminTags() {
   const createTagCategories = useCreateTagCategories();
@@ -71,7 +72,7 @@ function AdminTags() {
     if (selectedUsers.length === tags.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(tags.map((tag) => tag.id));
+      setSelectedUsers(tags?.map((tag) => tag.id));
     }
   };
 
@@ -281,25 +282,23 @@ function AdminTags() {
             <Loading />
           ) : (
             <div className="admin-table-body">
-              {tags.map((tag) => (
+              {tags?.map((tag) => (
                 <div key={tag.id} className="admin-table-row">
                   <div className="admin-table-cell">{tag.name}</div>
                   <div className="admin-table-cell">{tag.category}</div>
                   <div className="admin-table-cell">
-                    <button
+                    <MdDelete
                       onClick={() => {
                         setDeleteId(tag.id);
                         handleModalClick("delete");
                       }}
                       style={{
-                        backgroundColor: "#e74c3c22",
-                        color: "#e74c3c",
-                        border: "none",
-                        padding: "10px 15px",
+                        cursor: "pointer",
+                        fontSize: "14px",
+                        padding: "0",
+                        transform: "scale(1.5)",
                       }}
-                    >
-                      Delete tag
-                    </button>
+                    />
                   </div>
                 </div>
               ))}
@@ -327,7 +326,7 @@ function AdminTags() {
               onChange={handleChange}
             >
               <option value={null}>--</option>
-              {tagCategories.map((category, id) => (
+              {tagCategories?.map((category, id) => (
                 <option key={id} value={category.id}>
                   {category.name}
                 </option>
@@ -357,7 +356,7 @@ function AdminTags() {
       <Modal isOpen={isOpen.delete} onClose={closeModal}>
         <div className="admin__modal">
           <h1>Are you sure you want to delete?</h1>
-          <p>This action is not reversible</p>
+
           <button onClick={() => handleDeleteTag(deleteId)}>
             Delete permanently
           </button>

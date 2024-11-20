@@ -2,32 +2,16 @@ import { BiPlus } from "react-icons/bi";
 import "./admin-admins.css";
 import { FiFilter } from "react-icons/fi";
 import { TiExportOutline } from "react-icons/ti";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const DATA = [
-  {
-    id: 1,
-    name: "angelifeda",
-    email: "angel@gmail.com",
-    phone: +23425525222,
-    status: "active",
-    action: "...",
-  },
-  {
-    id: 2,
-    name: "James Bachelor",
-    phone: +23898234898,
-    email: "jbache@gmail.com",
-    amount: "1000",
-    status: "approved",
-    action: "...",
-  },
-
-  // Add more user records as needed
-];
+import { useFetchAdmins } from "../../../redux/actions/userActions";
+import Loading from "../../../component/splash/loading/Loading";
+import NoResult from "../../../component/splash/no-result/NoResult";
 
 function AdminAdmins() {
+  const fetchAdmins = useFetchAdmins();
+  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -40,16 +24,32 @@ function AdminAdmins() {
   };
 
   const handleSelectAllUsers = () => {
-    if (selectedUsers.length === DATA.length) {
+    if (selectedUsers.length === users.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(DATA.map((user) => user.id));
+      setSelectedUsers(users.map((user) => user.id));
     }
   };
 
   const handleBulkAction = () => {
     alert(`Performing bulk action on users: ${selectedUsers.join(", ")}`);
   };
+
+  const handleFetchAdmins = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchAdmins();
+      setUsers(response.payload.results);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchAdmins();
+  }, []);
 
   return (
     <div className="ad__novel">
@@ -81,7 +81,7 @@ function AdminAdmins() {
             <div className="admin-table-cell">
               <input
                 type="checkbox"
-                checked={selectedUsers.length === DATA.length}
+                checked={selectedUsers.length === users.length}
                 onChange={handleSelectAllUsers}
               />
             </div>
@@ -90,27 +90,35 @@ function AdminAdmins() {
             <div className="admin-table-cell">Email Address</div>
             <div className="admin-table-cell">Phone Number</div>
             <div className="admin-table-cell">Status</div>
-            <div className="admin-table-cell">Action</div>
+            {/* <div className="admin-table-cell">Action</div> */}
           </div>
-          <div className="admin-table-body">
-            {DATA.map((user) => (
-              <div key={user.id} className="admin-table-row">
-                <div className="admin-table-cell">
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.includes(user.id)}
-                    onChange={() => handleSelectUser(user.id)}
-                  />
+          {loading ? (
+            <Loading />
+          ) : users.length == 0 ? (
+            <NoResult />
+          ) : (
+            <div className="admin-table-body">
+              {users.map((user) => (
+                <div key={user.id} className="admin-table-row">
+                  <div className="admin-table-cell">
+                    <input
+                      type="checkbox"
+                      checked={selectedUsers.includes(user.id)}
+                      onChange={() => handleSelectUser(user.id)}
+                    />
+                  </div>
+                  <div className="admin-table-cell">{user.id}</div>
+                  <div className="admin-table-cell">{`${user.first_name} ${user.last_name}`}</div>
+                  <div className="admin-table-cell">{user.email}</div>
+                  <div className="admin-table-cell">{user.phone}</div>
+                  <div className="admin-table-cell">
+                    {user.is_active ? `active` : `inactive`}
+                  </div>
+                  {/* <div className="admin-table-cell">{user.action}</div> */}
                 </div>
-                <div className="admin-table-cell">{user.id}</div>
-                <div className="admin-table-cell">{user.name}</div>
-                <div className="admin-table-cell">{user.email}</div>
-                <div className="admin-table-cell">{user.phone}</div>
-                <div className="admin-table-cell">{user.status}</div>
-                <div className="admin-table-cell">{user.action}</div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

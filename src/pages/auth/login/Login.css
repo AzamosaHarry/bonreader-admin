@@ -25,7 +25,7 @@
 }
 .login__container > h1 {
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--font-size-primary);
   line-height: 24px;
   color: #000000;
   margin-bottom: 20px;
@@ -68,7 +68,7 @@
   height: 48px;
   width: 322px;
   border: 0;
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   line-height: 24px;
   padding: 10px;
   color: #868686;
@@ -81,11 +81,11 @@
   width: 322px;
   height: 46px;
   border: 0;
-  background: #669933;
+  background: var(--color-secondary-accent);
   color: white;
 }
 .login__container__form > p {
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   line-height: 24px;
   text-align: center;
 }
@@ -94,7 +94,7 @@
   cursor: pointer;
 }
 .login__container > p {
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   line-height: 24px;
   text-align: center;
   margin-top: auto;
@@ -108,7 +108,7 @@
   width: 100%;
   width: 322px;
   color: #721c24;
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   line-height: 25px;
   font-weight: 500;
   margin-top: 20px;

@@ -12,6 +12,7 @@ import {
 } from "../../../redux/actions/bookActions";
 import Loading from "../../../component/splash/loading/Loading";
 import toastManager from "../../../component/toast/ToasterManager";
+import NoResult from "../../../component/splash/no-result/NoResult";
 
 function AdminNovel() {
   const getNovels = useGetNovels();
@@ -126,18 +127,19 @@ function AdminNovel() {
     try {
       setLoading(true);
       const response = await getNovels();
+      console.log("novels response", response);
 
       if (response.payload && response.meta.requestStatus == "fulfilled") {
         setNovels(response.payload.results);
         return;
       } else {
         toastManager.addToast({
-          message: "Failed to retrieve tags",
+          message: "Failed to retrieve novels",
           type: "error",
         });
       }
     } catch (err) {
-      console.error("Error fetching tags:", err);
+      console.error("Error fetching novels:", err);
     } finally {
       setLoading(false);
     }
@@ -154,8 +156,6 @@ function AdminNovel() {
     handleGetNovels();
     setManualUpdate(false);
   };
-
-  console.log("novels response", novels);
 
   return (
     <div className="ad__novel">
@@ -203,6 +203,8 @@ function AdminNovel() {
 
           {loading ? (
             <Loading />
+          ) : novels.length == 0 ? (
+            <NoResult />
           ) : (
             <div className="admin-table-body">
               {novels.map((novel) => (
@@ -310,7 +312,7 @@ function AdminNovel() {
       <Modal isOpen={isOpen.delete} onClose={closeModal}>
         <div className="admin__modal">
           <h1>Are you sure you want to delete?</h1>
-          <p>This action is not reversible</p>
+
           <button onClick={() => handleDeleteNovel(deleteId)}>
             Delete permanently
           </button>

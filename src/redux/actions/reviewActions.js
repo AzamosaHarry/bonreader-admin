@@ -1,26 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { addComment, fetchComments } from "../../services/reviewServices";
 
-export const loadComments = createAsyncThunk(
-  "comments/loadComments",
-  async (bookId, { rejectWithValue }) => {
+import { useDispatcher } from "../../utils/useDispatcher";
+import { getReviews } from "../../services/reviewServices";
+
+export const doGetReviews = createAsyncThunk(
+  "books/doGetReviews",
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await fetchComments(bookId);
-      return response;
+      const data = await getReviews();
+      return data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.message || "Action failed");
     }
   }
 );
 
-export const postComment = createAsyncThunk(
-  "comments/postComment",
-  async ({ bookId, commentData }, { rejectWithValue }) => {
-    try {
-      const response = await addComment(bookId, commentData);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+export const useGetReviews = () => useDispatcher(doGetReviews);

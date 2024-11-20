@@ -35,7 +35,7 @@ function Signup() {
       const response = await signUp(formData);
       if (response.status === 200 || response.status === "success") {
         // console.log("signup", response);
-        navigate("/admin/dashboard");
+        navigate("/dashboard");
         return;
       } else {
         setErrorMessage(response.message);

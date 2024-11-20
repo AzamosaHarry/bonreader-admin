@@ -1,19 +1,22 @@
 import api from "../api/axios";
 
-export const fetchComments = async (bookId) => {
+export const getReviews = async () => {
   try {
-    const response = await api.get(`/books/${bookId}/comments`);
+    const response = await api.get(`/content-ratings/`);
     return response.data;
   } catch (error) {
-    throw error;
-  }
-};
-
-export const addComment = async (bookId, commentData) => {
-  try {
-    const response = await api.post(`/books/${bookId}/comments`, commentData);
-    return response.data;
-  } catch (error) {
+    if (error.response) {
+      // Add server response details to the error
+      error.message = `Service failed: ${
+        error.response.data.error || error.response.statusText
+      }`;
+    } else if (error.request) {
+      // Add request details to the error
+      error.message = "Service failed: No response received from server.";
+    } else {
+      // Add request setup details to the error
+      error.message = `Service failed: ${error.message}`;
+    }
     throw error;
   }
 };

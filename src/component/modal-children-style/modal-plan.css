@@ -25,19 +25,19 @@
   display: flex;
   align-items: center;
   gap: 30px;
-  border: 1px solid #f58634;
+  border: 1px solid var(--color-primary-accent);
   padding: 10px 20px;
   border-radius: 10px;
   cursor: pointer;
 }
 .modal__plan__checkbox__container__label {
   width: 80%;
-  font-size: 14px;
+  font-size: var(--font-size-secondary);
   font-weight: 600;
 }
 .modal__plan__checkbox__container__check {
   width: 20%;
   font-size: 22px;
   font-weight: 600;
-  color: #f58634;
+  color: var(--color-primary-accent);
 }

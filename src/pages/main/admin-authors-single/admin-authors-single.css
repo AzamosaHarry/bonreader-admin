@@ -5,7 +5,7 @@
   margin-top: 30px;
 }
 .aas__section__one > h1 {
-  font-size: 16px;
+  font-size: var(--font-size-primary);
   font-weight: 500;
   margin-bottom: 20px;
 }

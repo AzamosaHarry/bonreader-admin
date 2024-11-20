@@ -2,6 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   createUser,
   deleteUser,
+  fetchAdmins,
+  fetchAuthors,
   fetchUser,
   fetchUserMe,
   fetchUsers,
@@ -41,6 +43,30 @@ export const doFetchUsers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await fetchUsers();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Action failed");
+    }
+  }
+);
+
+export const doFetchAuthors = createAsyncThunk(
+  "user/doFetchUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await fetchAuthors();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Action failed");
+    }
+  }
+);
+
+export const doFetchAdmins = createAsyncThunk(
+  "user/doFetchAdmins",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await fetchAdmins();
       return data;
     } catch (error) {
       return rejectWithValue(error.message || "Action failed");
@@ -121,8 +147,10 @@ export const doPartialUpdateUserMe = createAsyncThunk(
 );
 
 export const useFetchUser = () => useDispatcher(doFetchUser);
+export const useGetAuthors = () => useDispatcher(doFetchAuthors);
 export const useFetchUserMe = () => useDispatcher(doFetchUserMe);
 export const useFetchUsers = () => useDispatcher(doFetchUsers);
+export const useFetchAdmins = () => useDispatcher(doFetchAdmins);
 export const useCreateUser = () => useDispatcher(doCreateUser);
 export const useDeleteUser = () => useDispatcher(doDeleteUser);
 export const useUpdateUser = () => useDispatcher(doUpdateUser);

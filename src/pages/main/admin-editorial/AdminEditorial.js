@@ -1,40 +1,22 @@
 import { BiPlus } from "react-icons/bi";
 import "./admin-editorial.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../../component/modal/Modal";
-
-const DATA = [
-  {
-    id: 1,
-    title: "Almost Perfect Parners",
-    author: "Andy Banner",
-    category: "Fantasy",
-    chapters: "1125",
-    action: "...",
-  },
-  {
-    id: 2,
-    title: "Hidden Interest",
-    author: "Shally Poppy",
-    category: "Romance",
-    chapters: "100",
-    action: "...",
-  },
-  {
-    id: 3,
-    title: "Hidden Interest",
-    author: "Shally Poppy",
-    category: "Romance",
-    chapters: "100",
-    action: "...",
-  },
-
-  // Add more user records as needed
-];
+import Loading from "../../../component/splash/loading/Loading";
+import NoResult from "../../../component/splash/no-result/NoResult";
+import { useNavigate } from "react-router-dom";
+import { useGetEp } from "../../../redux/actions/epActions";
+import { MdDelete } from "react-icons/md";
 
 function AdminEditorial() {
+  const getEp = useGetEp();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [ep, setEp] = useState([]);
+  const [deleteId, setDeleteId] = useState(null);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    genre: "",
+    ep: "",
   });
   const [isOpen, setIsOpen] = useState({
     new: false,
@@ -44,10 +26,15 @@ function AdminEditorial() {
       new: false,
     });
   };
+
   const handleModalClick = (option) => {
-    option === "new"
-      ? setIsOpen((prev) => ({ ...prev, new: true }))
-      : closeModal();
+    if (option === "new") {
+      setIsOpen((prev) => ({ ...prev, new: true }));
+    } else if (option === "delete") {
+      setIsOpen((prev) => ({ ...prev, delete: true }));
+    } else {
+      closeModal();
+    }
   };
 
   const handleChange = (e) => {
@@ -67,16 +54,62 @@ function AdminEditorial() {
   };
 
   const handleSelectAllUsers = () => {
-    if (selectedUsers.length === DATA.length) {
+    if (selectedUsers.length === ep.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(DATA.map((user) => user.id));
+      setSelectedUsers(ep.map((user) => user.id));
     }
   };
 
   const handleBulkAction = () => {
     alert(`Performing bulk action on users: ${selectedUsers.join(", ")}`);
   };
+
+  const handleGetEp = async () => {
+    try {
+      setLoading(true);
+      const response = await getEp();
+      setEp(response.payload.results);
+      console.log("get Ep", response);
+    } catch (err) {
+      console.error("Error fetching Ep:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteEp = async (id) => {
+    // try {
+    //   setLoading(true);
+    //   const response = await deleteRole(id);
+    //   if (response.meta.requestStatus == "fulfilled") {
+    //     toastManager.addToast({
+    //       message: "Role deleted successfully",
+    //       type: "success",
+    //     });
+    //     triggerManualUpdate();
+    //     return;
+    //   } else {
+    //     toastManager.addToast({
+    //       message: "Failed to delete role",
+    //       type: "error",
+    //     });
+    //   }
+    // } catch (err) {
+    //   console.error("Error deleting:", err);
+    //   toastManager.addToast({
+    //     message: err,
+    //     type: "error",
+    //   });
+    // } finally {
+    //   setLoading(false);
+    //   closeModal();
+    // }
+  };
+
+  useEffect(() => {
+    handleGetEp();
+  }, []);
 
   return (
     <div className="ad__novel">
@@ -97,7 +130,7 @@ function AdminEditorial() {
             <div className="admin-table-cell">
               <input
                 type="checkbox"
-                checked={selectedUsers.length === DATA.length}
+                checked={selectedUsers.length === ep.length}
                 onChange={handleSelectAllUsers}
               />
             </div>
@@ -109,25 +142,44 @@ function AdminEditorial() {
             <div className="admin-table-cell">Chapters</div>
             <div className="admin-table-cell">Action</div>
           </div>
-          <div className="admin-table-body">
-            {DATA.map((user) => (
-              <div key={user.id} className="admin-table-row">
-                <div className="admin-table-cell">
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.includes(user.id)}
-                    onChange={() => handleSelectUser(user.id)}
-                  />
+          {loading ? (
+            <Loading />
+          ) : ep.length == 0 ? (
+            <NoResult />
+          ) : (
+            <div className="admin-table-body">
+              {ep.map((ep) => (
+                <div key={ep.id} className="admin-table-row">
+                  <div className="admin-table-cell">
+                    <input
+                      type="checkbox"
+                      checked={selectedUsers.includes(ep.id)}
+                      onChange={() => handleSelectUser(ep.id)}
+                    />
+                  </div>
+                  <div className="admin-table-cell">{ep.id}</div>
+                  <div className="admin-table-cell">{ep.title}</div>
+                  <div className="admin-table-cell">{ep.author?.name}</div>
+                  <div className="admin-table-cell">{ep.genres[0]}</div>
+                  <div className="admin-table-cell">{ep.num_chapters}</div>
+                  <div className="admin-table-cell">
+                    <MdDelete
+                      onClick={() => {
+                        setDeleteId(ep.id);
+                        handleModalClick("delete");
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        fontSize: "14px",
+                        padding: "0",
+                        transform: "scale(1.5)",
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="admin-table-cell">{user.id}</div>
-                <div className="admin-table-cell">{user.title}</div>
-                <div className="admin-table-cell">{user.author}</div>
-                <div className="admin-table-cell">{user.category}</div>
-                <div className="admin-table-cell">{user.chapters}</div>
-                <div className="admin-table-cell">{user.action}</div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -137,14 +189,24 @@ function AdminEditorial() {
           <p>Search for novel to add to the editorial pick</p>
           <form className="admin__modal__form">
             <input
-              name="genre"
-              id="genre"
+              name="ep"
+              id="ep"
               type="text"
-              placeholder="Enter genre"
+              placeholder="Enter novel"
               onChange={handleChange}
             />
           </form>
           <button>New pick</button>
+        </div>
+      </Modal>
+
+      <Modal isOpen={isOpen.delete} onClose={closeModal}>
+        <div className="admin__modal">
+          <h1>Are you sure you want to delete?</h1>
+
+          <button onClick={() => handleDeleteEp(deleteId)}>
+            Delete permanently
+          </button>
         </div>
       </Modal>
     </div>

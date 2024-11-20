@@ -43,11 +43,11 @@
   color: white;
 }
 .ad__dashboard__sc__two__block__end > h1 {
-  font-size: 16px;
+  font-size: var(--font-size-primary);
   font-weight: 400;
 }
 .ad__dashboard__sc__two__block__end > p {
-  font-size: 16px;
+  font-size: var(--font-size-primary);
   font-weight: 600;
 }
 .ad__dashboard__sc__three {
