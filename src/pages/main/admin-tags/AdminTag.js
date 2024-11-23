@@ -12,6 +12,7 @@ import toastManager from "../../../component/toast/ToasterManager";
 import Loading from "../../../component/splash/loading/Loading";
 import Modal from "../../../component/modal/Modal";
 import { MdDelete } from "react-icons/md";
+import { ClipLoader } from "react-spinners";
 
 function AdminTags() {
   const createTagCategories = useCreateTagCategories();
@@ -358,7 +359,7 @@ function AdminTags() {
           <h1>Are you sure you want to delete?</h1>
 
           <button onClick={() => handleDeleteTag(deleteId)}>
-            Delete permanently
+            {loading ? <ClipLoader size={20} /> : `Delete permanently`}
           </button>
         </div>
       </Modal>

@@ -1,7 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { useDispatcher } from "../../utils/useDispatcher";
-import { getSubscriptiionPlans } from "../../services/subscriptionServices";
+import {
+  createSubscriptionPlan,
+  getSubscriptiionPlans,
+} from "../../services/subscriptionServices";
 
 export const doGetSubscriptionPlans = createAsyncThunk(
   "books/doGetSubscriptionPlans",
@@ -15,5 +18,19 @@ export const doGetSubscriptionPlans = createAsyncThunk(
   }
 );
 
+export const doCreateSubscriptionPlan = createAsyncThunk(
+  "books/doCreateSubscriptionPlan",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const data = await createSubscriptionPlan(payload);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Action failed");
+    }
+  }
+);
+
 export const useGetSubscriptionPlans = () =>
   useDispatcher(doGetSubscriptionPlans);
+export const useCreateSubscriptionPlan = () =>
+  useDispatcher(doCreateSubscriptionPlan);

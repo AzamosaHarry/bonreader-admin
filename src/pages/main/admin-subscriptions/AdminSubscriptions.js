@@ -9,43 +9,7 @@ import Loading from "../../../component/splash/loading/Loading";
 import NoResult from "../../../component/splash/no-result/NoResult";
 import { useGetSubscriptionPlans } from "../../../redux/actions/subscriptionActions";
 import { MdDelete } from "react-icons/md";
-
-const DATA = [
-  {
-    id: 1,
-    plan: "Weekly",
-    price: "1000",
-    duration: "7 days",
-    status: "active",
-    action: "...",
-  },
-  {
-    id: 2,
-    plan: "Monthly",
-    price: "3000",
-    duration: "30 days",
-    status: "inactive",
-    action: "...",
-  },
-  {
-    id: 3,
-    plan: "Half Annually",
-    price: "14000",
-    duration: "180 days",
-    status: "active",
-    action: "...",
-  },
-  {
-    id: 4,
-    plan: "Annually",
-    price: "22000",
-    duration: "360 days",
-    status: "active",
-    action: "...",
-  },
-
-  // Add more subscriptionPlan records as needed
-];
+import { ClipLoader } from "react-spinners";
 
 function AdminSubscriptions() {
   const getSubscriptionPlans = useGetSubscriptionPlans();
@@ -115,7 +79,6 @@ function AdminSubscriptions() {
       setLoading(true);
       const response = await getSubscriptionPlans();
       setSubscriptionPlans(response.payload.results);
-      console.log("get subscription plans", response);
     } catch (err) {
       console.error("Error fetching subscription plans:", err);
     } finally {
@@ -276,7 +239,7 @@ function AdminSubscriptions() {
           <h1>Are you sure you want to delete?</h1>
 
           <button onClick={() => handleDeleteSubcriptionPlan(deleteId)}>
-            Delete permanently
+            {loading ? <ClipLoader size={20} /> : `Delete permanently`}
           </button>
         </div>
       </Modal>

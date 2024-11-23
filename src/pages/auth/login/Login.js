@@ -8,14 +8,38 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useLogin } from "../../../redux/actions/authActions";
 import toastManager from "../../../component/toast/ToasterManager";
+import { useFetchUserMe } from "../../../redux/actions/userActions";
+import { useDispatch } from "react-redux";
 
 function Login() {
   const navigate = useNavigate();
   const login = useLogin();
+  const fetchUser = useFetchUserMe();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const auth = useAuth();
+  const dispatch = useDispatch();
+
+  const handleFetchUser = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchUser();
+
+      if (response?.payload) {
+        setErrorMessage("");
+        dispatch({ type: "UPDATE_USER", payload: response.payload });
+        return;
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      setErrorMessage(error.response.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,6 +53,8 @@ function Login() {
           message: "Successful login",
           type: "success",
         });
+
+        handleFetchUser();
         navigate("/dashboard");
         return;
       } else {

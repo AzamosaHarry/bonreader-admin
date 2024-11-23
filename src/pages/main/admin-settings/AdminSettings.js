@@ -1,10 +1,48 @@
 import { BiPlus } from "react-icons/bi";
 import "./admin-settings.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLogout } from "../../../redux/actions/authActions";
+import toastManager from "../../../component/toast/ToasterManager";
 
 function AdminSettings() {
+  const navigate = useNavigate();
+  const logout = useLogout();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const handleChange = () => {
     //do something
+  };
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const response = await logout();
+      if (response.status === true || response.status === "success") {
+        setErrorMessage("");
+
+        toastManager.addToast({
+          message: "Logout successful",
+          type: "success",
+        });
+        navigate("/");
+        return;
+      } else {
+        setErrorMessage(response.message);
+        toastManager.addToast({
+          // message: "Logout unsuccessful",
+          // type: "error",
+          message: "Logout successful",
+          type: "success",
+        });
+      }
+    } catch (error) {
+      setErrorMessage(error.response.message);
+    } finally {
+      setLoading(false);
+      navigate("/");
+    }
   };
 
   return (
@@ -14,7 +52,7 @@ function AdminSettings() {
       </section>
       <section className="ad__settings__sc__one">
         <div>Change password</div>
-        <div>
+        {/* <div>
           Enable two factor authentication
           <div className="toggle__container">
             <input
@@ -27,8 +65,8 @@ function AdminSettings() {
               <span className="toggle__label__text"></span>
             </label>
           </div>
-        </div>
-        <div>Logout </div>
+        </div> */}
+        <div onClick={handleLogout}>Logout </div>
       </section>
     </div>
   );

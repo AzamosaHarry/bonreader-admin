@@ -4,12 +4,18 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../../component/splash/loading/Loading";
 import NoResult from "../../../component/splash/no-result/NoResult";
-import { useGetCoins } from "../../../redux/actions/coinActions";
+import {
+  useDeleteCoinOptions,
+  useGetCoins,
+} from "../../../redux/actions/coinActions";
 import Modal from "../../../component/modal/Modal";
 import { MdDelete } from "react-icons/md";
+import toastManager from "../../../component/toast/ToasterManager";
+import { ClipLoader } from "react-spinners";
 
 function AdminCoins() {
   const getCoins = useGetCoins();
+  const deleteCoin = useDeleteCoinOptions();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [coins, setCoins] = useState([]);
@@ -80,32 +86,32 @@ function AdminCoins() {
   };
 
   const handleDeleteCoin = async (id) => {
-    // try {
-    //   setLoading(true);
-    //   const response = await deleteCoin(id);
-    //   if (response.meta.requestStatus == "fulfilled") {
-    //     toastManager.addToast({
-    //       message: "Coin deleted successfully",
-    //       type: "success",
-    //     });
-    //     triggerManualUpdate();
-    //     return;
-    //   } else {
-    //     toastManager.addToast({
-    //       message: "Failed to delete Coin",
-    //       type: "error",
-    //     });
-    //   }
-    // } catch (err) {
-    //   console.error("Error deleting:", err);
-    //   toastManager.addToast({
-    //     message: err,
-    //     type: "error",
-    //   });
-    // } finally {
-    //   setLoading(false);
-    //   closeModal();
-    // }
+    try {
+      setLoading(true);
+      const response = await deleteCoin(id);
+      if (response.meta.requestStatus == "fulfilled") {
+        toastManager.addToast({
+          message: "Coin deleted successfully",
+          type: "success",
+        });
+        handleGetCoins();
+        return;
+      } else {
+        toastManager.addToast({
+          message: "Failed to delete Coin",
+          type: "error",
+        });
+      }
+    } catch (err) {
+      console.error("Error deleting:", err);
+      toastManager.addToast({
+        message: err,
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+      closeModal();
+    }
   };
 
   useEffect(() => {
@@ -204,7 +210,7 @@ function AdminCoins() {
           <h1>Are you sure you want to delete?</h1>
 
           <button onClick={() => handleDeleteCoin(deleteId)}>
-            Delete permanently
+            {loading ? <ClipLoader size={20} /> : `Delete permanently`}
           </button>
         </div>
       </Modal>

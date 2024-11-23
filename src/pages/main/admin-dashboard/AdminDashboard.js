@@ -1,13 +1,13 @@
 import { FaPeopleGroup } from "react-icons/fa6";
 import "./admin-dashboard.css";
 import image1 from "../../../assets/ad__ds__one.png";
-import image2 from "../../../assets/ad__ds__two.png";
 import { FaChartLine, FaUserCircle } from "react-icons/fa";
 import Loading from "../../../component/splash/loading/Loading";
 import NoResult from "../../../component/splash/no-result/NoResult";
 import { useNavigate } from "react-router-dom";
 import { useGetDashboardData } from "../../../redux/actions/miscActions";
 import { useEffect, useState } from "react";
+import Chart from "react-apexcharts";
 
 function AdminDashboard() {
   const getDashboardData = useGetDashboardData();
@@ -15,6 +15,30 @@ function AdminDashboard() {
   const [errorMessage, setErrorMessage] = useState("");
   const [dashboardData, setDashboardData] = useState(null);
   const navigate = useNavigate();
+
+  let publishedPercentage;
+  let unPublishedPercentage;
+
+  useEffect(() => {
+    publishedPercentage =
+      dashboardData?.summary?.published_stories /
+      (dashboardData?.summary?.published_stories +
+        dashboardData?.summary?.unpublished_stories);
+
+    unPublishedPercentage = 100 - publishedPercentage;
+  }, [dashboardData]);
+
+  const [chart, setChart] = useState({
+    options: {
+      chart: {
+        id: "basic-bar",
+      },
+    },
+    series: [50, 50],
+    chartOptions: {
+      labels: ["Unpublished", "Published"],
+    },
+  });
 
   const BLOCKS = [
     {
@@ -96,7 +120,17 @@ function AdminDashboard() {
       setLoading(true);
       const response = await getDashboardData();
       setDashboardData(response.payload);
-      console.log("get DashboardData", response.payload);
+      setChart({
+        options: {
+          chart: {
+            id: "basic-bar",
+          },
+        },
+        series: [publishedPercentage, unPublishedPercentage],
+        chartOptions: {
+          labels: ["Unpublished", "Published"],
+        },
+      });
     } catch (err) {
       console.error("Error fetching DashboardData:", err);
     } finally {
@@ -139,16 +173,25 @@ function AdminDashboard() {
           })}
         </section>
       )}
-      <section className="ad__dashboard__sc__three">
-        <div className="ad__dashboard__sc__three__start">
-          <p>Revenue generation per month</p>
-          <img alt="" src={image1} />
-        </div>
-        <div className="ad__dashboard__sc__three__end">
-          <p>Published novels vs Unpublished novels</p>
-          <img alt="" src={image2} />
-        </div>
-      </section>
+      {dashboardData && (
+        <section className="ad__dashboard__sc__three">
+          {dashboardData?.revenue_breakdown?.length > 0 && (
+            <div className="ad__dashboard__sc__three__start">
+              <p>Revenue generation per month</p>
+              <img alt="" src={image1} />
+            </div>
+          )}
+          <div className="ad__dashboard__sc__three__end">
+            <p>Published novels vs Unpublished novels</p>
+            <Chart
+              options={chart.options}
+              series={chart.series}
+              type="donut"
+              height="300px"
+            />
+          </div>
+        </section>
+      )}
     </div>
   );
 }

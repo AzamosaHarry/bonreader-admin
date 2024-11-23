@@ -5,6 +5,7 @@ import Loading from "../../../component/splash/loading/Loading";
 import { useGetContracts } from "../../../redux/actions/contractAction";
 import Modal from "../../../component/modal/Modal";
 import NoResult from "../../../component/splash/no-result/NoResult";
+import { ClipLoader } from "react-spinners";
 
 function AdminContracts() {
   const getContracts = useGetContracts();
@@ -158,7 +159,7 @@ function AdminContracts() {
           <h1>Are you sure you want to delete?</h1>
 
           <button onClick={() => handleDeleteContract(deleteId)}>
-            Delete permanently
+            {loading ? <ClipLoader size={20} /> : `Delete permanently`}
           </button>
         </div>
       </Modal>

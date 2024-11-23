@@ -1,12 +1,19 @@
-import { BiPlus } from "react-icons/bi";
 import "./admin-new-admin.css";
 import { useState } from "react";
+import { ClipLoader } from "react-spinners";
+import toastManager from "../../../component/toast/ToasterManager";
+import { useNavigate } from "react-router-dom";
+import { useCreateAdmin } from "../../../redux/actions/userActions";
 
 function AdminNewAdmin() {
+  const navigate = useNavigate();
+  const createAdmin = useCreateAdmin();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    phone: "",
+    penName: "",
     email: "",
   });
 
@@ -15,15 +22,47 @@ function AdminNewAdmin() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleCreateAdmin = async (e) => {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.penName ||
+      !formData.email
+    ) {
+      setErrorMessage("Fields marked as important cannot be empty");
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await createAdmin(formData);
+
+      if (response?.payload && !response.error) {
+        setErrorMessage("");
+        toastManager.addToast({
+          message: "Admin created successfully",
+          type: "success",
+        });
+        navigate("/admins");
+        return;
+      } else {
+        setErrorMessage(response.message);
+        setErrorMessage("User with this email or pen name already exists");
+      }
+    } catch (error) {
+      setErrorMessage(error.response.message);
+      toastManager.addToast({
+        message: "failed to create admin",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="admin-new-admin ad__novel">
       <section className="ad__novel__sc__one">
         <h1>Manage Admins</h1>
-        <span className="ad__novel__sc__one__span">
-          <button className="ad__novel__sc__one__span__button alt">
-            <BiPlus /> Add new
-          </button>
-        </span>
       </section>
       <section className="ana__section__one">
         <h1>Admin Details</h1>
@@ -50,11 +89,11 @@ function AdminNewAdmin() {
               />
             </span>
             <span>
-              <label htmlFor="phone">Phone *</label>
+              <label htmlFor="penName">Pen Name *</label>
               <input
-                type="phone"
-                id="phone"
-                name="phone"
+                type="text"
+                id="penName"
+                name="penName"
                 required
                 onChange={handleFormChange}
               />
@@ -69,8 +108,23 @@ function AdminNewAdmin() {
                 onChange={handleFormChange}
               />
             </span>
+
+            {errorMessage && (
+              <p
+                style={{
+                  color: "red",
+                }}
+              >
+                {errorMessage}
+              </p>
+            )}
           </form>
-          <button className="ana__section__one__form__submit">Add Admin</button>
+          <button
+            className="ana__section__one__form__submit"
+            onClick={handleCreateAdmin}
+          >
+            {loading ? <ClipLoader size={20} /> : `Add admin`}
+          </button>
         </div>
       </section>
     </div>

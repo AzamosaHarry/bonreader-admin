@@ -167,8 +167,8 @@ button:disabled {
   display: block;
   position: absolute;
   right: 0;
-  top: 50px;
-  background-color: var(--color-border);
+  top: 30px;
+  background-color: #f7f5ff;
   border-radius: 10px;
   padding: 20px 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

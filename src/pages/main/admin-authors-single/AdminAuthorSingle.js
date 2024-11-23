@@ -1,28 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdEmail } from "react-icons/md";
 import "./admin-authors-single.css";
-
-const DATA = [
-  {
-    id: 1,
-    title: "The Grimmer",
-    chapter: "123: low but not low",
-    dateCreated: "12/03/2024",
-    action: "...",
-  },
-  {
-    id: 2,
-    title: "The Grimmer",
-    chapter: "1: Underlying Fact",
-    dateCreated: "02/09/2022",
-    action: "...",
-  },
-
-  // Add more user records as needed
-];
+import { useParams } from "react-router-dom";
+import { useFetchUser } from "../../../redux/actions/userActions";
+import NoResult from "../../../component/splash/no-result/NoResult";
+import Loading from "../../../component/splash/loading/Loading";
+import { FaCircleUser } from "react-icons/fa6";
+import { useGetAuthorNovels } from "../../../redux/actions/bookActions";
 
 function AdminAuthorsSingle() {
+  const fetchUser = useFetchUser();
+  const getAuthorNovels = useGetAuthorNovels();
+  const { id } = useParams();
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [user, setUser] = useState(null);
+  const [novels, setNovels] = useState([]);
 
   const handleSelectUser = (id) => {
     setSelectedUsers((prevSelectedUsers) =>
@@ -33,10 +27,10 @@ function AdminAuthorsSingle() {
   };
 
   const handleSelectAllUsers = () => {
-    if (selectedUsers.length === DATA.length) {
+    if (selectedUsers.length === novels.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(DATA.map((user) => user.id));
+      setSelectedUsers(novels.map((user) => user.id));
     }
   };
 
@@ -44,31 +38,74 @@ function AdminAuthorsSingle() {
     alert(`Performing bulk action on users: ${selectedUsers.join(", ")}`);
   };
 
+  const handleFetchUser = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchUser(id);
+
+      if (response?.payload) {
+        setErrorMessage("");
+        setUser(response.payload);
+        return;
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      setErrorMessage(error.response.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGetAuthorNovels = async () => {
+    try {
+      setLoading(true);
+      const response = await getAuthorNovels(id);
+      console.log("author novels", response);
+
+      if (response?.payload) {
+        setErrorMessage("");
+        setNovels(response?.payload?.results);
+        return;
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      setErrorMessage(error.response.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchUser();
+    handleGetAuthorNovels();
+  }, []);
+
   return (
     <div className="aas">
       <section className="ad__novel__sc__one">
         <h1>Author</h1>
-        <span className="ad__novel__sc__one__span">
-          {/* <button
-            className="ad__novel__sc__one__span__button alt"
-            onClick={() => navigate("create")}
-          >
-            <BiPlus /> Add new
-          </button> */}
-        </span>
+        <span className="ad__novel__sc__one__span"></span>
       </section>
       <section className="admin__profile__section__one">
         <div className="admin__profile__section__one__start"></div>
         <div className="admin__profile__section__one__end">
-          <div className="admin__profile__section__one__end__img"></div>
+          <div className="admin__profile__section__one__end__img">
+            {user?.photo_url ? (
+              <img src={user.photo_url} />
+            ) : (
+              <FaCircleUser style={{ fontSize: "150px", color: "#ccc" }} />
+            )}
+          </div>
           <div className="admin__profile__section__one__end__text">
             <span>
-              <h1>James Bachelor</h1>
-              <h3>Admin</h3>
+              <h1>{`${user?.first_name} ${user?.last_name}`}</h1>
+              <h3>Author</h3>
             </span>
-            <h3>ID: 23661346</h3>
+            <h3>{`ID: ${user?.id}`}</h3>
             <h3>
-              <MdEmail /> jbach@gmail.com
+              <MdEmail /> {user?.email}
             </h3>
           </div>
         </div>
@@ -81,7 +118,7 @@ function AdminAuthorsSingle() {
               <div className="admin-table-cell">
                 <input
                   type="checkbox"
-                  checked={selectedUsers.length === DATA.length}
+                  checked={selectedUsers.length === novels.length}
                   onChange={handleSelectAllUsers}
                 />
               </div>
@@ -89,23 +126,29 @@ function AdminAuthorsSingle() {
               <div className="admin-table-cell">Name</div>
               <div className="admin-table-cell">Chapters</div>
             </div>
-            <div className="admin-table-body">
-              {DATA.map((user) => (
-                <div key={user.id} className="admin-table-row">
-                  <div className="admin-table-cell">
-                    <input
-                      type="checkbox"
-                      checked={selectedUsers.includes(user.id)}
-                      onChange={() => handleSelectUser(user.id)}
-                    />
-                  </div>
+            {loading ? (
+              <Loading />
+            ) : novels?.length == 0 ? (
+              <NoResult />
+            ) : (
+              <div className="admin-table-body">
+                {novels.map((novel) => (
+                  <div key={novel.id} className="admin-table-row">
+                    <div className="admin-table-cell">
+                      <input
+                        type="checkbox"
+                        checked={selectedUsers.includes(novel.id)}
+                        onChange={() => handleSelectUser(novel.id)}
+                      />
+                    </div>
 
-                  <div className="admin-table-cell">{user.id}</div>
-                  <div className="admin-table-cell">{user.title}</div>
-                  <div className="admin-table-cell">{user.chapter}</div>
-                </div>
-              ))}
-            </div>
+                    <div className="admin-table-cell">{novel.id}</div>
+                    <div className="admin-table-cell">{novel.title}</div>
+                    <div className="admin-table-cell">{novel.num_chapters}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </section>

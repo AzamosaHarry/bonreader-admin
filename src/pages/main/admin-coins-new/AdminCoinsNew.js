@@ -1,7 +1,15 @@
+import { ClipLoader } from "react-spinners";
 import "./admin-coins-new.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCreateCoinOptions } from "../../../redux/actions/coinActions";
+import toastManager from "../../../component/toast/ToasterManager";
 
 function AdminCoinsNew() {
+  const navigate = useNavigate();
+  const createCoinOptions = useCreateCoinOptions();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     numberOfCoins: "",
     price: "",
@@ -12,17 +20,48 @@ function AdminCoinsNew() {
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log(formData);
   };
+
+  const handleCreateOption = async (e) => {
+    if (!formData.numberOfCoins || !formData.price || !formData.bonus) {
+      setErrorMessage("Fields marked as important cannot be empty");
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await createCoinOptions(formData);
+
+      if (response?.payload && !response.error) {
+        setErrorMessage("");
+        toastManager.addToast({
+          message: "Coin option created successfully",
+          type: "success",
+        });
+        navigate("/coins");
+        return;
+      } else {
+        setErrorMessage(response.message);
+        toastManager.addToast({
+          message: "failed to create coin option",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setErrorMessage(error.response.message);
+      toastManager.addToast({
+        message: "failed to create coin option",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="ad__novel">
       <section className="ad__novel__sc__one">
         <h1>Add new coins</h1>
-        <span className="ad__novel__sc__one__span">
-          {/* <button className="ad__novel__sc__one__span__button alt">
-            <BiPlus /> Add new
-          </button> */}
-        </span>
+        <span className="ad__novel__sc__one__span"></span>
       </section>
       <div className="ana__section__one__form__wrap">
         <form className="ana__section__one__form">
@@ -58,16 +97,36 @@ function AdminCoinsNew() {
           </span>
           <span>
             <label htmlFor="currency">Currency *</label>
-            <input
-              type="number"
+            <select
               id="currency"
               name="currency"
               required
               onChange={handleFormChange}
-            />
+              value={formData.currency}
+            >
+              <option value={null}>--</option>
+              <option value="NGN">NGN</option>
+              <option value="USD">USD</option>
+            </select>
           </span>
+
+          {errorMessage && (
+            <p
+              style={{
+                color: "red",
+              }}
+            >
+              {errorMessage}
+            </p>
+          )}
         </form>
-        <button className="ana__section__one__form__submit">Publish</button>
+        <button
+          className="ana__section__one__form__submit"
+          disabled={loading}
+          onClick={handleCreateOption}
+        >
+          {loading ? <ClipLoader size={20} /> : `Create`}
+        </button>
       </div>
     </div>
   );

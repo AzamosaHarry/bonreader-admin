@@ -1,30 +1,36 @@
-import { BiPlus } from "react-icons/bi";
 import "./admin-novels.css";
-import { FiFilter } from "react-icons/fi";
 import { TiExportOutline } from "react-icons/ti";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import Modal from "../../../component/modal/Modal";
 import {
+  useAssignEditor,
   useDeleteNovel,
   useGetNovels,
 } from "../../../redux/actions/bookActions";
 import Loading from "../../../component/splash/loading/Loading";
 import toastManager from "../../../component/toast/ToasterManager";
 import NoResult from "../../../component/splash/no-result/NoResult";
+import { ClipLoader } from "react-spinners";
+import { useFetchAdmins } from "../../../redux/actions/userActions";
 
 function AdminNovel() {
+  const fetchAdmins = useFetchAdmins();
   const getNovels = useGetNovels();
   const deleteNovel = useDeleteNovel();
+  const assignEditor = useAssignEditor();
   const navigate = useNavigate();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [isActionDropdown, setIsActionDropdown] = useState("");
   const [currentActionId, setCurrentActionId] = useState("");
   const [deleteId, setDeleteId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [novels, setNovels] = useState([]);
-
+  const [editors, setEditors] = useState([]);
+  const [novelId, setNovelId] = useState(null);
+  const [editorId, setEditorId] = useState(null);
   const [manualUpdate, setManualUpdate] = useState(false);
   const [formData, setFormData] = useState({
     tag: "",
@@ -44,15 +50,24 @@ function AdminNovel() {
   };
 
   const handleModalClick = (option) => {
-    option === "assign"
-      ? setIsOpen((prev) => ({ ...prev, assign: true }))
-      : setIsOpen((prev) => ({ ...prev, reject: true }));
+    if (option === "assign") {
+      setIsOpen((prev) => ({ ...prev, assign: true }));
+    } else if (option === "reject") {
+      setIsOpen((prev) => ({ ...prev, reject: true }));
+    } else {
+      closeModal();
+    }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     console.log(formData);
+  };
+
+  const handleEditorChange = (e) => {
+    const { value } = e.target;
+    setEditorId(value);
   };
 
   const toggleActionDropdown = (id) => {
@@ -91,6 +106,55 @@ function AdminNovel() {
 
   const handleApprove = () => {
     console.log("appprove");
+  };
+
+  const handleFetchAdmins = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchAdmins();
+      setEditors(response.payload.results);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchAdmins();
+  }, []);
+
+  const handleAssignEditor = async () => {
+    if (!editorId) {
+      setErrorMessage("Please select an editor");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await assignEditor({
+        novelId: novelId,
+        editorId: editorId,
+      });
+
+      if (response.payload && response.meta.requestStatus == "fulfilled") {
+        toastManager.addToast({
+          message: "Novel assigned to editor",
+          type: "success",
+        });
+        return;
+      } else {
+        toastManager.addToast({
+          message: "Failed to assign editor",
+          type: "error",
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching novels:", err);
+    } finally {
+      setLoading(false);
+      closeModal();
+    }
   };
 
   const handleDeleteNovel = async (id) => {
@@ -161,14 +225,7 @@ function AdminNovel() {
     <div className="ad__novel">
       <section className="ad__novel__sc__one">
         <h1>All Novels</h1>
-        <span className="ad__novel__sc__one__span">
-          {/* <button className="ad__novel__sc__one__span__button">
-            Filter <FiFilter />
-          </button>
-          <button className="ad__novel__sc__one__span__button alt">
-            <BiPlus /> Add novel
-          </button> */}
-        </span>
+        <span className="ad__novel__sc__one__span"></span>
       </section>
       <section className="ad__novel__sc__two">
         <button className="ad__novel__sc__two__button">
@@ -218,73 +275,89 @@ function AdminNovel() {
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("1")}
+                    onClick={() => navigate(`${novel.id}`)}
                   >
                     {novel.id}
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("1")}
+                    onClick={() => navigate(`${novel.id}`)}
                   >
                     {novel.title}
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("1")}
+                    onClick={() => navigate(`${novel.id}`)}
                   >
                     {novel.author.name}
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("1")}
+                    onClick={() => navigate(`${novel.id}`)}
                   >
-                    {novel.category}
+                    {novel.genres[0]}
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("1")}
+                    onClick={() => navigate(`${novel.id}`)}
                   >
-                    {novel.chapter}
+                    {novel.num_chapters}
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("1")}
+                    onClick={() => navigate(`${novel.id}`)}
                   >
                     {novel.num_views}
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("1")}
+                    onClick={() => navigate(`${novel.id}`)}
                   >
-                    {novel.completed}
+                    {novel.completed ? `completed` : `Incomplete`}
                   </div>
 
-                  <div
-                    className="admin-table-cell"
-                    onClick={() => toggleActionDropdown(novel.id)}
-                  >
-                    {novel.action}
-                    {isActionDropdown === novel.id && (
-                      <div
-                        className="admin-action-menu"
-                        onClick={handleMenuClick}
+                  <div className="admin-table-cell">
+                    <div
+                      style={{
+                        position: "relative",
+                      }}
+                    >
+                      <h3
+                        onClick={() => toggleActionDropdown(novel.id)}
+                        style={{
+                          cursor: "pointer",
+                        }}
                       >
-                        <ul>
-                          <li onClick={handleApprove}>Approve</li>
-                          <li
-                            onClick={() => {
-                              handleModalClick("assign");
-                              toggleActionDropdown(novel?.id);
-                            }}
-                          >
-                            Assign to editor <FaArrowRight />
-                          </li>
-                          <li>
-                            Reject <FaArrowRight />{" "}
-                          </li>
-                        </ul>
-                      </div>
-                    )}
+                        ...
+                      </h3>
+                      {isActionDropdown === novel.id && (
+                        <div
+                          className="admin-action-menu"
+                          onClick={handleMenuClick}
+                        >
+                          <ul>
+                            <li onClick={handleApprove}>Approve</li>
+                            <li
+                              onClick={() => {
+                                handleModalClick("assign");
+                                setNovelId(novel.id);
+                                toggleActionDropdown(novel?.id);
+                              }}
+                            >
+                              Assign to editor <FaArrowRight />
+                            </li>
+                            <li
+                              onClick={() => {
+                                handleModalClick("reject");
+                                toggleActionDropdown(novel?.id);
+                              }}
+                            >
+                              Reject <FaArrowRight />{" "}
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -294,18 +367,65 @@ function AdminNovel() {
       </section>
 
       <Modal isOpen={isOpen.assign} onClose={closeModal}>
-        <div className="admin__modal">
+        <div className="admin__modal" style={{ width: "300px" }}>
           <h1>Assign Editor</h1>
-          <form className="admin__modal__form">
-            <input
-              name="editor"
-              id="editor"
-              type="text"
-              placeholder="Pick Editor"
-              onChange={handleChange}
-            />
+          {errorMessage && (
+            <p
+              style={{
+                color: "red",
+              }}
+            >
+              {errorMessage}
+            </p>
+          )}
+          <form
+            className="admin__modal__form"
+            style={{
+              maxHeight: "500px",
+              overflowY: "auto",
+            }}
+          >
+            {editors.map((editor, index) => (
+              <div
+                key={index}
+                style={{
+                  border: "1px solid gray",
+                  padding: "10px",
+                  width: "100%",
+                  borderRadius: "25px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                <input
+                  type="radio"
+                  name="editor"
+                  value={editor.id}
+                  onChange={handleEditorChange}
+                />
+                {`${editor.first_name} ${editor.first_name}`}
+              </div>
+            ))}
           </form>
-          <button>Add Pick</button>
+          <button onClick={handleAssignEditor}>
+            {loading ? <ClipLoader size={20} /> : `Assign editor`}
+          </button>
+        </div>
+      </Modal>
+
+      <Modal isOpen={isOpen.reject} onClose={closeModal}>
+        <div className="admin__modal" style={{ width: "300px" }}>
+          <h1>Reason for rejection</h1>
+          <form className="admin__modal__form">
+            <textarea
+              name="rejection"
+              id="rejection"
+              type="text"
+              onChange={handleChange}
+            ></textarea>
+          </form>
+          <button>{loading ? <ClipLoader size={20} /> : `Submit`}</button>
         </div>
       </Modal>
 
@@ -314,7 +434,7 @@ function AdminNovel() {
           <h1>Are you sure you want to delete?</h1>
 
           <button onClick={() => handleDeleteNovel(deleteId)}>
-            Delete permanently
+            {loading ? <ClipLoader size={20} /> : `Delete permanently`}
           </button>
         </div>
       </Modal>

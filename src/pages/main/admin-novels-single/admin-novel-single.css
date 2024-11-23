@@ -9,10 +9,14 @@
 .ad__novel__single__start {
   width: 200px;
   height: 260px;
+  overflow: hidden;
+  border-radius: var(--border-radius-large);
 }
 .ad__novel__single__start > img {
-  width: 100%;
   object-fit: cover;
+  object-position: center;
+  height: 100%;
+  width: 100%;
 }
 .ad__novel__single__end {
   display: flex;
@@ -44,7 +48,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px 0;
+  padding: 0px 0;
   border-bottom: 1px solid #ddd;
 }
 .ad__novel__single__section__two__block > h1 {
