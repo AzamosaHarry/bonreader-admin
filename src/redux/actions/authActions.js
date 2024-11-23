@@ -113,7 +113,6 @@ export const doLogoutAction = () => async (dispatch) => {
 
   try {
     const response = await logout();
-    // await deleteAllTokens();
     dispatch(logoutAction());
     return response;
   } catch (error) {

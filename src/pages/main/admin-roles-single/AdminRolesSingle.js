@@ -1,6 +1,7 @@
-import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./admin-roles-single.css";
+import { useGetRolePermissions } from "../../../redux/actions/rolePermissionAction";
 
 // Define sections and permissions here
 const sections = [
@@ -18,8 +19,12 @@ const sections = [
 ];
 
 function AdminRolesSingle() {
+  const getRolePermissions = useGetRolePermissions();
   const location = useLocation();
   const state = location.state;
+  const { id } = useParams();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // State management for checkboxes
   const [allChecked, setAllChecked] = useState(false);
@@ -60,6 +65,32 @@ function AdminRolesSingle() {
       }, {})
     );
   };
+
+  const handleGetRolePermissions = async () => {
+    try {
+      setLoading(true);
+      const response = await getRolePermissions(id);
+      console.log("banny", response);
+
+      if (
+        response?.payload.status === 200 ||
+        response?.payload.status === "success"
+      ) {
+        setErrorMessage("");
+        return;
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      setErrorMessage(error.response.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleGetRolePermissions();
+  }, []);
 
   return (
     <div className="admin-roles-single">

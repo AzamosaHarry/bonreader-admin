@@ -7,6 +7,7 @@ import NoResult from "../../../component/splash/no-result/NoResult";
 import { useGetAuthors } from "../../../redux/actions/userActions";
 import { MdDelete } from "react-icons/md";
 import Modal from "../../../component/modal/Modal";
+import { ClipLoader } from "react-spinners";
 
 function AdminAuthors() {
   const getAuthors = useGetAuthors();
@@ -134,7 +135,7 @@ function AdminAuthors() {
           </div>
           {loading ? (
             <Loading />
-          ) : authors.length == 0 ? (
+          ) : authors?.length == 0 ? (
             <NoResult />
           ) : (
             <div className="admin-table-body">
@@ -142,7 +143,7 @@ function AdminAuthors() {
                 <div key={user.id} className="admin-table-row">
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("/authors/1")}
+                    onClick={() => navigate(`/authors/${user.id}`)}
                   >
                     <input
                       type="checkbox"
@@ -152,29 +153,29 @@ function AdminAuthors() {
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("/authors/1")}
+                    onClick={() => navigate(`/authors/${user.id}`)}
                   >
                     {user.id}
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("/authors/1")}
+                    onClick={() => navigate(`/authors/${user.id}`)}
                   >{`${user.first_name} ${user.last_name}`}</div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("/authors/1")}
+                    onClick={() => navigate(`/authors/${user.id}`)}
                   >
                     {user.email}
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("/authors/1")}
+                    onClick={() => navigate(`/authors/${user.id}`)}
                   >
                     {user.num_novels}
                   </div>
                   <div
                     className="admin-table-cell"
-                    onClick={() => navigate("/authors/1")}
+                    onClick={() => navigate(`/authors/${user.id}`)}
                   >
                     {user.is_active ? `active` : `inactive`}
                   </div>
@@ -204,7 +205,7 @@ function AdminAuthors() {
           <h1>Are you sure you want to delete?</h1>
 
           <button onClick={() => handleDeleteAuthor(deleteId)}>
-            Delete permanently
+            {loading ? <ClipLoader size={20} /> : `Delete permanently`}
           </button>
         </div>
       </Modal>

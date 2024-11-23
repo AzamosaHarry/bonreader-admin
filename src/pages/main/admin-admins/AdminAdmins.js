@@ -88,7 +88,7 @@ function AdminAdmins() {
             <div className="admin-table-cell">S/N</div>
             <div className="admin-table-cell">Name</div>
             <div className="admin-table-cell">Email Address</div>
-            <div className="admin-table-cell">Phone Number</div>
+            <div className="admin-table-cell">Pen Name</div>
             <div className="admin-table-cell">Status</div>
             {/* <div className="admin-table-cell">Action</div> */}
           </div>
@@ -110,7 +110,7 @@ function AdminAdmins() {
                   <div className="admin-table-cell">{user.id}</div>
                   <div className="admin-table-cell">{`${user.first_name} ${user.last_name}`}</div>
                   <div className="admin-table-cell">{user.email}</div>
-                  <div className="admin-table-cell">{user.phone}</div>
+                  <div className="admin-table-cell">{user.pen_name}</div>
                   <div className="admin-table-cell">
                     {user.is_active ? `active` : `inactive`}
                   </div>

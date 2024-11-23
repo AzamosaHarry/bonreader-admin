@@ -1,12 +1,20 @@
 import { useState } from "react";
 import "./admin-subscription-plan.css";
+import { useCreateSubscriptionPlan } from "../../../redux/actions/subscriptionActions";
+import { ClipLoader } from "react-spinners";
+import toastManager from "../../../component/toast/ToasterManager";
+import { useNavigate } from "react-router-dom";
 
 function AdminSubscriptionsPlan() {
+  const navigate = useNavigate();
+  const createSubscriptiionPlan = useCreateSubscriptionPlan();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
-    plan: "",
+    name: "",
     description: "",
-    validity: "",
-    price: "",
+    duration: "",
+    amount: "",
   });
 
   const handleFormChange = (e) => {
@@ -15,37 +23,66 @@ function AdminSubscriptionsPlan() {
     console.log(formData);
   };
 
+  const handleCreatePlan = async (e) => {
+    if (
+      !formData.name ||
+      !formData.description ||
+      !formData.duration ||
+      !formData.amount
+    ) {
+      setErrorMessage("Fields cannot be empty");
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await createSubscriptiionPlan(formData);
+
+      if (response?.payload) {
+        setErrorMessage("");
+        toastManager.addToast({
+          message: "Subscription plan created successfully",
+          type: "success",
+        });
+        navigate("/subscriptions");
+        return;
+      } else {
+        setErrorMessage(response.message);
+        toastManager.addToast({
+          message: "failed to create subscription plan",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setErrorMessage(error.response.message);
+      toastManager.addToast({
+        message: "failed to create subscription plan",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="ad__novel">
       <section className="ad__novel__sc__one">
         <h1>Add new subscription plan</h1>
-        <span className="ad__novel__sc__one__span">
-          {/* <button className="ad__novel__sc__one__span__button alt">
-            <BiPlus /> Add new
-          </button> */}
-        </span>
+        <span className="ad__novel__sc__one__span"></span>
       </section>
       <div className="ana__section__one__form__wrap">
         <form className="ana__section__one__form">
           <span style={{ width: "100%" }}>
-            <label htmlFor="plan">Plan *</label>
+            <label htmlFor="name">Plan name*</label>
             <input
               type="text"
-              id="plan"
-              name="plan"
+              id="name"
+              name="name"
               required
               onChange={handleFormChange}
             />
           </span>
           <span style={{ width: "100%" }}>
             <label htmlFor="description">Description*</label>
-            {/* <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              required
-              onChange={handleFormChange}
-            /> */}
             <textarea
               id="description"
               name="description"
@@ -59,27 +96,41 @@ function AdminSubscriptionsPlan() {
             ></textarea>
           </span>
           <span>
-            <label htmlFor="validity">Validity *</label>
+            <label htmlFor="duration">Duration *</label>
             <input
-              type="validity"
-              id="validity"
-              name="validity"
+              id="duration"
+              name="duration"
               required
               onChange={handleFormChange}
             />
           </span>
           <span>
-            <label htmlFor="price">Price *</label>
+            <label htmlFor="amount">Amount *</label>
             <input
               type="number"
-              id="price"
-              name="price"
+              id="amount"
+              name="amount"
               required
               onChange={handleFormChange}
             />
           </span>
+          {errorMessage && (
+            <p
+              style={{
+                color: "red",
+              }}
+            >
+              {errorMessage}
+            </p>
+          )}
         </form>
-        <button className="ana__section__one__form__submit">Publish</button>
+        <button
+          className="ana__section__one__form__submit"
+          disabled={loading}
+          onClick={handleCreatePlan}
+        >
+          {loading ? <ClipLoader size={20} /> : `Create`}
+        </button>
       </div>
     </div>
   );

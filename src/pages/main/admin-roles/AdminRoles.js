@@ -8,6 +8,7 @@ import { useGetRoles } from "../../../redux/actions/rolePermissionAction";
 import Loading from "../../../component/splash/loading/Loading";
 import NoResult from "../../../component/splash/no-result/NoResult";
 import { MdDelete } from "react-icons/md";
+import { ClipLoader } from "react-spinners";
 
 function AdminRoles() {
   const getRoles = useGetRoles();
@@ -68,7 +69,6 @@ function AdminRoles() {
       setLoading(true);
       const response = await getRoles();
       setRoles(response.payload.results);
-      console.log("get roles", response);
     } catch (err) {
       console.error("Error fetching roles:", err);
     } finally {
@@ -144,22 +144,41 @@ function AdminRoles() {
           ) : (
             <div className="admin-table-body">
               {roles.map((role) => (
-                <div
-                  key={role.id}
-                  className="admin-table-row"
-                  onClick={() =>
-                    navigate("/admin-roles", { state: { type: role.name } })
-                  }
-                >
-                  <div className="admin-table-cell">
+                <div key={role.id} className="admin-table-row">
+                  <div
+                    className="admin-table-cell"
+                    onClick={() =>
+                      navigate(`/roles/${role.id}`, {
+                        state: { type: role.name },
+                      })
+                    }
+                  >
                     <input
                       type="checkbox"
                       checked={selectedRoles.includes(role.id)}
                       onChange={() => handleSelectUser(role.id)}
                     />
                   </div>
-                  <div className="admin-table-cell">{role.id}</div>
-                  <div className="admin-table-cell">{role.name}</div>
+                  <div
+                    className="admin-table-cell"
+                    onClick={() =>
+                      navigate(`/roles/${role.id}`, {
+                        state: { type: role.name },
+                      })
+                    }
+                  >
+                    {role.id}
+                  </div>
+                  <div
+                    className="admin-table-cell"
+                    onClick={() =>
+                      navigate(`/roles/${role.id}`, {
+                        state: { type: role.name },
+                      })
+                    }
+                  >
+                    {role.name}
+                  </div>
                   <div className="admin-table-cell">
                     <MdDelete
                       onClick={() => {
@@ -202,7 +221,7 @@ function AdminRoles() {
           <h1>Are you sure you want to delete?</h1>
 
           <button onClick={() => handleDeleteRole(deleteId)}>
-            Delete permanently
+            {loading ? <ClipLoader size={20} /> : `Delete permanently`}
           </button>
         </div>
       </Modal>

@@ -42,6 +42,27 @@ export const getNovel = async (id) => {
   }
 };
 
+export const getAuthorNovels = async (id) => {
+  try {
+    const response = await api.get(`/novels/?author=${id}`);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      // Add server response details to the error
+      error.message = `Service failed: ${
+        error.response.data.error || error.response.statusText
+      }`;
+    } else if (error.request) {
+      // Add request details to the error
+      error.message = "Service failed: No response received from server.";
+    } else {
+      // Add request setup details to the error
+      error.message = `Service failed: ${error.message}`;
+    }
+    throw error;
+  }
+};
+
 export const getNovelsCompleted = async () => {
   try {
     const response = await api.get("/novels/completed");
@@ -189,6 +210,32 @@ export const deleteNovel = async (id) => {
   }
 };
 
+export const assignEditor = async (payload) => {
+  try {
+    const response = await api.post(
+      `/novels/admin/${payload.novelId}/assign-editor/`,
+      {
+        editor: payload.editorId,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      // Add server response details to the error
+      error.message = `Service failed: ${
+        error.response.data.error || error.response.statusText
+      }`;
+    } else if (error.request) {
+      // Add request details to the error
+      error.message = "Service failed: No response received from server.";
+    } else {
+      // Add request setup details to the error
+      error.message = `Service failed: ${error.message}`;
+    }
+    throw error;
+  }
+};
+
 export const genre = async (genre) => {
   try {
     const response = await api.get(`/novels/?genre=${genre}`);
@@ -268,6 +315,10 @@ export const filterNovel = async (filter) => {
       );
     } else if (filter.listing) {
       response = await api.get(`/novels/?listing=${filter.listing}`);
+    } else if (filter.contractStatus) {
+      response = await api.get(
+        `/novels/?contract_status=${filter.contractStatus}`
+      );
     } else if (filter.query) {
       response = await api.get(`/novels/?${filter.query}`);
     } else {
@@ -360,7 +411,6 @@ export const getMyNovelChapter = async (payload) => {
 };
 
 export const getNovelChapters = async (id) => {
-  console.log("arizona", id);
   try {
     const response = await api.get(`/novels/${id}/chapters/`);
     return response.data;

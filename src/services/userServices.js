@@ -67,6 +67,33 @@ export const fetchAdmins = async () => {
   }
 };
 
+export const createAdmin = async (payload) => {
+  try {
+    const response = await api.post(`/staff/`, {
+      email: payload.email,
+      pen_name: payload.penName,
+      first_name: payload.firstName,
+      last_name: payload.lastName,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response) {
+      // Add server response details to the error
+      error.message = `Service failed: ${
+        error.response.data.error || error.response.statusText
+      }`;
+    } else if (error.request) {
+      // Add request details to the error
+      error.message = "Service failed: No response received from server.";
+    } else {
+      // Add request setup details to the error
+      error.message = `Service failed: ${error.message}`;
+    }
+    throw error;
+  }
+};
+
 export const fetchUser = async (id) => {
   try {
     const response = await api.get(`/users/${id}`);
@@ -186,11 +213,12 @@ export const fetchUserMe = async () => {
   }
 };
 
-export const updateUserMe = async (firstName, lastName) => {
+export const updateUserMe = async (payload) => {
   try {
     const response = await api.put(`/users/me/`, {
-      first_name: firstName,
-      last_name: lastName,
+      first_name: payload.firstName,
+      last_name: payload.lastName,
+      pen_name: payload.penName,
     });
     return response.data;
   } catch (error) {
@@ -211,11 +239,12 @@ export const updateUserMe = async (firstName, lastName) => {
   }
 };
 
-export const partialUpdateUserMe = async (firstName, lastName) => {
+export const partialUpdateUserMe = async (payload) => {
   try {
     const response = await api.patch(`/users/me/`, {
-      first_name: firstName,
-      last_name: lastName,
+      first_name: payload.firstName,
+      last_name: payload.lastName,
+      pen_name: payload.penName,
     });
     return response.data;
   } catch (error) {

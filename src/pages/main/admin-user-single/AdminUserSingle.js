@@ -1,9 +1,11 @@
 import { MdEmail } from "react-icons/md";
 import "./admin-user-single.css";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { BiCoin } from "react-icons/bi";
 import { BsCoin } from "react-icons/bs";
+import { useFetchUser } from "../../../redux/actions/userActions";
+import { FaCircleUser } from "react-icons/fa6";
 
 const DATA = [
   {
@@ -60,7 +62,11 @@ const DATA = [
 
 function AdminUserSingle() {
   const navigate = useNavigate();
-
+  const fetchUser = useFetchUser();
+  const { id } = useParams();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [user, setUser] = useState(null);
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   const handleSelectUser = (id) => {
@@ -83,6 +89,29 @@ function AdminUserSingle() {
     alert(`Performing bulk action on users: ${selectedUsers.join(", ")}`);
   };
 
+  const handleFetchUser = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchUser(id);
+
+      if (response?.payload) {
+        setErrorMessage("");
+        setUser(response.payload);
+        return;
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      setErrorMessage(error.response.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchUser();
+  }, []);
+
   return (
     <div className="ad__novel">
       <section
@@ -91,15 +120,21 @@ function AdminUserSingle() {
       >
         <div className="admin__profile__section__one__start"></div>
         <div className="admin__profile__section__one__end">
-          <div className="admin__profile__section__one__end__img"></div>
+          <div className="admin__profile__section__one__end__img">
+            {user?.photo_url ? (
+              <img src={user.photo_url} />
+            ) : (
+              <FaCircleUser style={{ fontSize: "150px", color: "#ccc" }} />
+            )}
+          </div>
           <div className="admin__profile__section__one__end__text">
             <span>
-              <h1>James Bachelor</h1>
-              <h3>Admin</h3>
+              <h1>{`${user?.first_name} ${user?.last_name}`}</h1>
+              <h3>Author</h3>
             </span>
-            <h3>ID: 23661346</h3>
+            <h3>{`ID: ${user?.id}`}</h3>
             <h3>
-              <MdEmail /> jbach@gmail.com
+              <MdEmail /> {user?.email}
             </h3>
             <h3>
               <BsCoin style={{}} /> Coins

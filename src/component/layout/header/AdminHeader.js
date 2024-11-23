@@ -1,13 +1,15 @@
 import { BiMenu } from "react-icons/bi";
 import "./admin-header.css";
 import image1 from "../../../assets/icons/logo.png";
-import image2 from "../../../assets/profile-image.jpg";
 import { useEffect, useState } from "react";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdOutlineClose } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { FaCircleUser } from "react-icons/fa6";
 
 function AdminHeader({ handleNav }) {
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [active, setActive] = useState(false);
   const location = useLocation();
@@ -42,8 +44,12 @@ function AdminHeader({ handleNav }) {
           className="ad__header__sc__two__profile"
           onClick={() => navigate("/profile")}
         >
-          <img alt="profile" src={image2} />
-          <p>Ramon Ridwan</p>
+          {user.photo_url ? (
+            <img src={user.photo_url} alt="logo" />
+          ) : (
+            <FaCircleUser style={{ fontSize: "30px", color: "#ccc" }} />
+          )}
+          <p>{`${user.first_name} ${user.last_name}`}</p>
         </div>
         <div>
           <IoNotificationsOutline className="ad__header__sc__two__notification__icon" />

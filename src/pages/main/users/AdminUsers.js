@@ -88,7 +88,7 @@ function AdminUsers() {
           </div>
           {loading ? (
             <Loading />
-          ) : users.length == 0 ? (
+          ) : users?.length == 0 ? (
             <NoResult />
           ) : (
             <div className="admin-table-body">
@@ -96,7 +96,7 @@ function AdminUsers() {
                 <div
                   key={user.id}
                   className="admin-table-row"
-                  onClick={() => navigate("1")}
+                  onClick={() => navigate(`/users/${user.id}`)}
                 >
                   <div className="admin-table-cell">
                     <input

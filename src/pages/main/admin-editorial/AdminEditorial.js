@@ -7,6 +7,7 @@ import NoResult from "../../../component/splash/no-result/NoResult";
 import { useNavigate } from "react-router-dom";
 import { useGetEp } from "../../../redux/actions/epActions";
 import { MdDelete } from "react-icons/md";
+import { ClipLoader } from "react-spinners";
 
 function AdminEditorial() {
   const getEp = useGetEp();
@@ -205,7 +206,7 @@ function AdminEditorial() {
           <h1>Are you sure you want to delete?</h1>
 
           <button onClick={() => handleDeleteEp(deleteId)}>
-            Delete permanently
+            {loading ? <ClipLoader size={20} /> : `Delete permanently`}
           </button>
         </div>
       </Modal>

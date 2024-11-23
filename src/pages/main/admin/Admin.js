@@ -1,27 +1,65 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { BsAirplane } from "react-icons/bs";
+import { useState } from "react";
 import "./admin.css";
 import AdminHeader from "../../../component/layout/header/AdminHeader";
-import { logout } from "../../../services/authServices";
 import { RiArrowRightSLine } from "react-icons/ri";
+import {
+  MdDashboard,
+  MdAdminPanelSettings,
+  MdEditDocument,
+  MdPayments,
+} from "react-icons/md";
+import { FaTag, FaBook, FaUserTie, FaCoins, FaUsers } from "react-icons/fa";
+import { BsCreditCardFill } from "react-icons/bs";
+import { GiCardPickup } from "react-icons/gi";
+import { SiPrivateinternetaccess } from "react-icons/si";
+import { MdPreview } from "react-icons/md";
+import { PiBooksFill } from "react-icons/pi";
+import { IoMdSettings, IoMdBookmarks } from "react-icons/io";
+import { BiSolidBookAdd } from "react-icons/bi";
+import { ImBook } from "react-icons/im";
 
 const NAV__ARRAY = [
-  { id: 1, path: "/dashboard", name: "Dashboard" },
-  { id: 2, path: "/novel", name: "Manage Novels" },
-  { id: 3, path: "/genre", name: "Manage Genre" },
-  { id: 4, path: "/review", name: "Chapters Review" },
-  { id: 5, path: "/users", name: "Manage Users" },
-  { id: 6, path: "/authors", name: "Manage Author" },
-  { id: 7, path: "/subscriptions", name: "Manage Subscription" },
-  { id: 8, path: "/coins", name: "Manage Coins" },
-  { id: 9, path: "/withdrawals", name: "Manage Withdrawals" },
-  { id: 10, path: "/admins", name: "Manage Admins" },
-  { id: 11, path: "/contracts", name: "Manage Contract" },
-  { id: 12, path: "/editorial-picks", name: "Editorial Picks" },
-  { id: 13, path: "/tags", name: "Manage Tags" },
-  { id: 14, path: "/roles", name: "Roles and Permissions" },
-  { id: 15, path: "/settings", name: "Settings" },
+  { id: 1, path: "/dashboard", name: "Dashboard", icon: MdDashboard },
+  { id: 2, path: "/novel", name: "Manage Novels", icon: FaBook },
+  { id: 3, path: "/genre", name: "Manage Genre", icon: PiBooksFill },
+  { id: 4, path: "/review", name: "Chapters Review", icon: MdPreview },
+  { id: 5, path: "/users", name: "Manage Users", icon: FaUsers },
+  { id: 6, path: "/authors", name: "Manage Author", icon: FaUserTie },
+  {
+    id: 7,
+    path: "/subscriptions",
+    name: "Manage Subscription",
+    icon: MdPayments,
+  },
+  { id: 8, path: "/coins", name: "Manage Coins", icon: FaCoins },
+  {
+    id: 9,
+    path: "/withdrawals",
+    name: "Manage Withdrawals",
+    icon: BsCreditCardFill,
+  },
+  {
+    id: 10,
+    path: "/admins",
+    name: "Manage Admins",
+    icon: MdAdminPanelSettings,
+  },
+  { id: 11, path: "/contracts", name: "Manage Contract", icon: MdEditDocument },
+  {
+    id: 12,
+    path: "/editorial-picks",
+    name: "Editorial Picks",
+    icon: GiCardPickup,
+  },
+  { id: 13, path: "/tags", name: "Manage Tags", icon: FaTag },
+  {
+    id: 14,
+    path: "/roles",
+    name: "Roles and Permissions",
+    icon: SiPrivateinternetaccess,
+  },
+  { id: 15, path: "/settings", name: "Settings", icon: IoMdSettings },
 ];
 
 function Admin() {
@@ -38,15 +76,6 @@ function Admin() {
     setActive(active);
   };
 
-  //   const handleLogout = async (e) => {
-  //     e.preventDefault();
-  //     try {
-  //       const response = await logout();
-  //     } catch (error) {
-  //       console.error("Error logging out:", error);
-  //     }
-  //   };
-
   return (
     <div className="admin">
       <AdminHeader handleNav={handleNav} />
@@ -57,107 +86,21 @@ function Admin() {
               const isNovel = item.name === "Manage Novels";
               if (isNovel) {
                 return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setColorId(item.id);
-                      handleNovelsClick();
-                    }}
-                    className={
-                      colorId === item.id ? "admin__navbar__active" : ""
-                    }
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      width: "100%",
-                      alignItems: "start",
-                      justifyContent: "start",
-                    }}
-                    // }
-                  >
-                    <div className="admin__navbar__novels__display">
-                      <BsAirplane
-                        className={
-                          colorId === item.id
-                            ? "admin__navbar__novels__display__icon--active"
-                            : "admin__navbar__novels__display__icon"
-                        }
-                      />
-
-                      <h2
-                        className={
-                          colorId === item.id
-                            ? "admin__navbar__novels__display__text--active"
-                            : "admin__navbar__novels__display__text"
-                        }
-                      >
-                        {item.name}
-                      </h2>
-
-                      <RiArrowRightSLine
-                        className={
-                          colorId === item.id
-                            ? "admin__navbar__novels__icon--active"
-                            : "admin__navbar__novels__icon"
-                        }
-                      />
-                    </div>
+                  <>
                     <div
-                      className={`admin__navbar__novels__accordion${
-                        isNovelsOpen ? " active" : ""
-                      }`}
-                    >
-                      <h3 onClick={() => navigate("/novels")}>All Novels</h3>
-                      <h3 onClick={() => navigate("/novels-approved")}>
-                        Approved Novels
-                      </h3>
-                      <h3 onClick={() => navigate("/novels-new")}>
-                        New Novels
-                      </h3>
-                      <h3 onClick={() => navigate("/novels-rejected")}>
-                        Rejected Novels
-                      </h3>
-                    </div>
-                  </div>
-                );
-              } else {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      navigate(item.path);
-                      setColorId(item.id);
-                      setIsNovelsOpen(false);
-                    }}
-                    className={
-                      colorId === item.id ? "admin__navbar__active" : ""
-                    }
-                  >
-                    <BsAirplane className="admin__navbar__icon" />
-                    <h3>{item.name}</h3>{" "}
-                  </div>
-                );
-              }
-              return (
-                <div
-                  key={index}
-                  onClick={() => {
-                    navigate(item.path);
-                    setColorId(item.id);
-                  }}
-                  className={colorId === item.id ? "admin__navbar__active" : ""}
-                >
-                  {isNovel ? (
-                    <div
+                      key={index}
                       className={
-                        colorId === item.id
-                          ? "admin__navbar__novels__wrap--active"
-                          : "admin__navbar__novels__wrap"
+                        colorId === item.id ? "admin__navbar__active" : ""
                       }
-                      // onClick={handleNovelsClick}
                     >
-                      <div className="admin__navbar__novels__display">
-                        <BsAirplane
+                      <div
+                        className="admin__navbar__novels__display"
+                        onClick={() => {
+                          setColorId(item.id);
+                          handleNovelsClick();
+                        }}
+                      >
+                        <item.icon
                           className={
                             colorId === item.id
                               ? "admin__navbar__novels__display__icon--active"
@@ -183,25 +126,52 @@ function Admin() {
                           }
                         />
                       </div>
+                    </div>
+
+                    {isNovelsOpen && (
                       <div
                         className={`admin__navbar__novels__accordion${
                           isNovelsOpen ? " active" : ""
                         }`}
                       >
-                        <h3>All Novels</h3>
-                        <h3>Approved Novels</h3>
-                        <h3>New Novels</h3>
-                        <h3>Rejected Novels</h3>
+                        <h3 onClick={() => navigate("/novels")}>
+                          <item.icon className="" />
+                          All Novels
+                        </h3>
+                        <h3 onClick={() => navigate("/novels-approved")}>
+                          <IoMdBookmarks className="" />
+                          Approved Novels
+                        </h3>
+                        <h3 onClick={() => navigate("/novels-new")}>
+                          <BiSolidBookAdd className="" />
+                          New Novels
+                        </h3>
+                        <h3 onClick={() => navigate("/novels-rejected")}>
+                          <ImBook className="" />
+                          Rejected Novels
+                        </h3>
                       </div>
-                    </div>
-                  ) : (
-                    <>
-                      <BsAirplane className="admin__navbar__icon" />
-                      <h3>{item.name}</h3>
-                    </>
-                  )}
-                </div>
-              );
+                    )}
+                  </>
+                );
+              } else {
+                return (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      navigate(item.path);
+                      setColorId(item.id);
+                      // setIsNovelsOpen(false);
+                    }}
+                    className={
+                      colorId === item.id ? "admin__navbar__active" : ""
+                    }
+                  >
+                    <item.icon className="admin__navbar__icon" />
+                    <h3>{item.name}</h3>{" "}
+                  </div>
+                );
+              }
             })}
           </section>
         </div>

@@ -12,7 +12,7 @@ import AdminNovel from "./pages/main/admin-novels/AdminNovel";
 import AdminGenre from "./pages/main/admin-genre/AdminGenre";
 import AdminUsers from "./pages/main/users/AdminUsers";
 import AdminAuthors from "./pages/main/authors/AdminAuthors";
-import AdminSubscriptions from "./pages/main/admin-subscriptions/AdminSunscriptions";
+import AdminSubscriptions from "./pages/main/admin-subscriptions/AdminSubscriptions";
 import AdminCoins from "./pages/main/admin-coins/AdminCoins";
 import AdminWithdrawals from "./pages/main/admin-withdrawals/admin-withdrawals";
 import AdminAdmins from "./pages/main/admin-admins/AdminAdmins";
@@ -80,7 +80,7 @@ function App() {
               <Route path="admins/create" element={<AdminNewAdmin />} />
               <Route path="withdrawals" element={<AdminWithdrawals />} />
               <Route path="roles" element={<AdminRoles />} />
-              <Route path="admin-roles" element={<AdminRolesSingle />} />
+              <Route path="roles/:id" element={<AdminRolesSingle />} />
               <Route path="tags" element={<AdminTags />} />
               <Route path="contracts" element={<AdminContracts />} />
               <Route path="settings" element={<AdminSettings />} />

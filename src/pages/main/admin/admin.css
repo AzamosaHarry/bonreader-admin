@@ -142,51 +142,37 @@
   display: flex;
   width: 100%;
   gap: 4px;
-  color: inherit;
 }
 .admin__navbar__novels__accordion {
-  margin-top: 10px;
   display: none;
-  /* border-radius: 10px; */
-  width: 100%;
-  /* background: red; */
+  background: blue;
 }
+
 .admin__navbar__novels__accordion.active {
   display: block;
+  background: white;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0;
 }
 .admin__navbar__novels__accordion h3 {
   width: 100%;
-  border-top: 1px solid white;
   padding: 15px 0;
   margin: 5px 0;
-  color: var(--color-primary-accent);
+  color: gray !important;
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  border-top: 1px solid gray;
 }
 .admin__navbar__novels__accordion.active h3 {
-  width: 100%;
-  border-top: 1px solid white;
-  padding: 15px 0;
-  color: var(--color-background);
+  border-top: 1px solid lightgray;
 }
 .admin__navbar__active > span {
   color: var(--color-background);
 }
 .admin__navbar__active > h3 {
   color: var(--color-background);
-}
-.admin__navbar__dropdown {
-  display: flex;
-  align-items: center;
-  padding: 15px 0;
-  cursor: pointer;
-  width: 100%;
-}
-.admin__navbar__dropdown > span {
-  margin-left: auto;
-}
-.admin__navbar__dropdown > span > h3 {
-  font-size: 15px;
-  font-weight: 500;
-  margin-left: 5px;
 }
 
 @media all and (max-width: 768px) {

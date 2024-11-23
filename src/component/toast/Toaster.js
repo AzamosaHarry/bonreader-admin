@@ -20,7 +20,7 @@ const Toaster = ({ message, type, duration, onClose }) => {
   return (
     <div className={`toaster toaster-${type}`}>
       <span className="toaster-span">{message}</span>
-      <button
+      <div
         className="toaster-close"
         onClick={() => {
           setVisible(false);
@@ -28,7 +28,7 @@ const Toaster = ({ message, type, duration, onClose }) => {
         }}
       >
         ×
-      </button>
+      </div>
     </div>
   );
 };

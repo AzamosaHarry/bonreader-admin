@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  createAdmin,
   createUser,
   deleteUser,
   fetchAdmins,
@@ -86,6 +87,18 @@ export const doCreateUser = createAsyncThunk(
   }
 );
 
+export const doCreateAdmin = createAsyncThunk(
+  "user/doCreateAdmin",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const data = await createAdmin(payload);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Action failed");
+    }
+  }
+);
+
 export const doDeleteUser = createAsyncThunk(
   "user/doDeleteUser",
   async (id, { rejectWithValue }) => {
@@ -124,9 +137,9 @@ export const doPartialUpdateUser = createAsyncThunk(
 
 export const doUpdateUserMe = createAsyncThunk(
   "user/doUpdateUserMe",
-  async (firstName, lastName, { rejectWithValue }) => {
+  async (payload, { rejectWithValue }) => {
     try {
-      const data = await updateUserMe(firstName, lastName);
+      const data = await updateUserMe(payload);
       return data;
     } catch (error) {
       return rejectWithValue(error.message || "Action failed");
@@ -136,9 +149,9 @@ export const doUpdateUserMe = createAsyncThunk(
 
 export const doPartialUpdateUserMe = createAsyncThunk(
   "user/doPartialUpdateUserMe",
-  async (firstName, lastName, { rejectWithValue }) => {
+  async (payload, { rejectWithValue }) => {
     try {
-      const data = await partialUpdateUserMe(firstName, lastName);
+      const data = await partialUpdateUserMe(payload);
       return data;
     } catch (error) {
       return rejectWithValue(error.message || "Action failed");
@@ -152,6 +165,7 @@ export const useFetchUserMe = () => useDispatcher(doFetchUserMe);
 export const useFetchUsers = () => useDispatcher(doFetchUsers);
 export const useFetchAdmins = () => useDispatcher(doFetchAdmins);
 export const useCreateUser = () => useDispatcher(doCreateUser);
+export const useCreateAdmin = () => useDispatcher(doCreateAdmin);
 export const useDeleteUser = () => useDispatcher(doDeleteUser);
 export const useUpdateUser = () => useDispatcher(doUpdateUser);
 export const usePartialUpdateUser = () => useDispatcher(doPartialUpdateUser);

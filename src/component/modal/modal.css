@@ -15,7 +15,7 @@
 }
 .modal__content {
   width: fit-content;
-  /* min-height: 40vh; */
+  min-width: 350px;
   min-height: max-content;
   background: #fff;
   color: black;

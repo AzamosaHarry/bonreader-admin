@@ -31,6 +31,8 @@ import {
   getNovelsCompleted,
   getNovels,
   patchChapterContent,
+  getAuthorNovels,
+  assignEditor,
 } from "../../services/bookServices";
 
 export const doGetNovels = createAsyncThunk(
@@ -69,6 +71,18 @@ export const doGetNovel = createAsyncThunk(
   }
 );
 
+export const doGetAuthorNovels = createAsyncThunk(
+  "books/getAuthorNovels",
+  async (id, { rejectWithValue }) => {
+    try {
+      const data = await getAuthorNovels(id);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message || "Failed to get novels");
+    }
+  }
+);
+
 export const doGetMyNovels = createAsyncThunk(
   "books/doGetMyNovels",
   async (_, { rejectWithValue }) => {
@@ -101,6 +115,18 @@ export const doCreateNovel = createAsyncThunk(
       return response;
     } catch (error) {
       return rejectWithValue(error.message || "Failed to create novel");
+    }
+  }
+);
+
+export const doAssignEditor = createAsyncThunk(
+  "books/assignEditor",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await assignEditor(payload);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message || "Failed to assign editor");
     }
   }
 );
@@ -385,9 +411,11 @@ export const useFilterNovel = () => useDispatcher(doFilterNovel);
 export const useGenre = () => useDispatcher(doGenre);
 export const useRanking = () => useDispatcher(doRanking);
 export const useGetNovel = () => useDispatcher(doGetNovel);
+export const useGetAuthorNovels = () => useDispatcher(doGetAuthorNovels);
 export const useGetMyNovels = () => useDispatcher(doGetMyNovels);
 export const useGetMyNovel = () => useDispatcher(doGetMyNovel);
 export const useCreateNovel = () => useDispatcher(doCreateNovel);
+export const useAssignEditor = () => useDispatcher(doAssignEditor);
 export const useGetNovels = () => useDispatcher(doGetNovels);
 export const useGetNovelsCompleted = () => useDispatcher(doGetNovelsCompleted);
 export const useReading = () => useDispatcher(doReading);
